@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
     return sequelize.define('NickName', {
-        NickNameInx: {
+        NickNameIdx: {
             type: DataTypes.INTEGER,
             allowNull: false,
             autoIncrement: true,

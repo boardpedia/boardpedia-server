@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
         },
         star: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.FLOAT,
             unique: false,
             allowNull: true,
             defaultValue: 0
