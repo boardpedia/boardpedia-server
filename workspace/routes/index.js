@@ -7,6 +7,15 @@ router.get('/', function(req, res, next) {
 });
 
 // User
-// router.use('/user', require('./user'))
+router.use('/user', require('./user'))
+// Game
+router.use('/game', require('./game'))
+// Theme
+router.use('/theme', require('./theme'))
+
+
+
+
+
 
 module.exports = router;
