@@ -9,6 +9,21 @@ var usersRouter = require('./routes/users');
 
 var app = express();
 
+const {
+  sequelize
+} = require('./models');
+
+/** alter: true를 해줘야 데이터베이스에 수정이 반영됨 */
+sequelize.sync({
+  alter: true
+})
+.then(() => {
+  console.log('데이터베이스 연결 성공.');
+})
+.catch((error) => {
+  console.error(error);
+})
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
