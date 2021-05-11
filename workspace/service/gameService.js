@@ -74,7 +74,7 @@ module.exports = {
     },
 
 
-    /* 보드게임 저장 POST : [ /game/save/:gameIdx] */
+    /* 보드게임 저장 POST : [ /game/save] */
     saveGame: async (UserIdx, GameIdx) => {
         try {
             const user = await User.findOne({
@@ -93,31 +93,30 @@ module.exports = {
             throw error;
         }
     },
+
+    /* 보드게임 저장 취소 DELETE : [ /game/save] */
+    saveGameUndo: async (UserIdx, GameIdx) => {
+        try {
+            const user = await User.findOne({
+                where: {
+                    UserIdx,
+                }
+            });
+            
+            const saveGame = await Saved.destroy({
+                where: {
+                    GameIdx,
+                }
+            });
+
+            await user.removeSaved(saveGame)
+            return saveGame;
+        } catch (error) {
+            throw error;
+        }
+    },
     
-    // getChatById: async (chatDetailsIdx) => {
-    //     try {
-    //         const postInfo = await ChatDetails.findOne({
-    //             where:{
-                    
-    //                 chatDetailsIdx: chatDetailsIdx,
-    //             },
-    //             attributes: ['replyNum','replyType']
-    //         })
-    //         const chat = await Chat.findAll({
-    //             where : {
-    //                 chatDetailsIdx: chatDetailsIdx,
-    //             },
-    //             attributes: ['text','nextAction'],
-    //         });
-    //         const aponymousChat = ({
-    //             chat,
-    //             postInfo
-    //         });
-    //         return aponymousChat;
-    //     } catch (error) {
-    //         throw error;
-    //     }
-    // },
+    
 
     
 

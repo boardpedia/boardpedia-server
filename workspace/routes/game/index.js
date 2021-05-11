@@ -15,9 +15,10 @@ router.get('/trending', gameController.getTrending);
 // router.get('/search', gameController);
 // /* 보드게임 추가하기 */
 // router.post('/add', gameController);
+
 /* 보드게임 저장하기 */
 router.post('/save', gameController.saveGame);
-// /*보드게임 저장 취소하기	*/
-// router.delete('/save', gameController);
+/*보드게임 저장 취소하기	*/
+router.delete('/save', gameController.saveGameUndo);
 
 module.exports = router;

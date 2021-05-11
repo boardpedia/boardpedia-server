@@ -59,5 +59,20 @@ module.exports = {
 
 
     /* 보드게임 저장 취소하기 DELETE: [ /game/save/:gameIdx] */
+    saveGameUndo: async (req, res) => {
+        // const {UserIdx} = req.decoded
+        const { gameIdx } = req.body;
+        try {
+            const saveGame = await gameService.saveGameUndo(1, gameIdx);
+            if (!saveGame) {
+                console.log('보드게임이 저장돼있지 않습니다!');
+                return res.status(sc.NOT_FOUND).send(ut.fail(sc.NOT_FOUND, "보드게임이 저장돼있지 않습니다!"));
+            }
+            return res.status(sc.OK).send(ut.success(sc.OK, "보드게임 저장 취소 성공"));
+        } catch (error) {
+            console.error(error);
+            return res.status(sc.INTERNAL_SERVER_ERROR).send(ut.fail(sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR));
+        }
+    },
 
 }
