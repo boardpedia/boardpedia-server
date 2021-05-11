@@ -21,4 +21,11 @@ router.post('/save', gameController.saveGame);
 /*보드게임 저장 취소하기	*/
 router.delete('/save', gameController.saveGameUndo);
 
+/* 저장한 보드게임 조회 GET : [ /game/saved] */
+router.get('/saved', gameController.getSavedGames);
+
+/* 전체 보드게임 조회하기 */
+router.get('/', gameController.getBoardgames);
+
+
 module.exports = router;
