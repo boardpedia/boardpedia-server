@@ -75,4 +75,37 @@ module.exports = {
         }
     },
 
+    /* 전체 보드게임 조회하기 GET: [ /game] */
+    getBoardgames: async (req, res) => {
+        // const day = req.params.day;
+        // const {UserIdx} = req.decoded
+        try {
+            const allgames = await gameService.getBoardgames(1);
+            if (!allgames) {
+                console.log('보드게임이 없습니다!');
+                return res.status(sc.NO_CONTENT).send(ut.fail(sc.NO_CONTENT, "보드게임이 없습니다!"));
+            }
+            return res.status(sc.OK).send(ut.success(sc.OK, "보드게임 전체 조회 성공", allgames));
+        } catch (error) {
+            console.error(error);
+            return res.status(sc.INTERNAL_SERVER_ERROR).send(ut.fail(sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR));
+        }
+    },
+
+    /* 저장한 보드게임 조회하기 GET: [ /game/saved ] */
+    getSavedGames: async (req, res) => {
+        // const day = req.params.day;
+        // const {UserIdx} = req.decoded
+        try {
+            const savedGames = await gameService.getSavedGames(1);
+            if (!savedGames) {
+                console.log('보드게임이 없습니다!');
+                return res.status(sc.NO_CONTENT).send(ut.fail(sc.NO_CONTENT, "보드게임이 없습니다!"));
+            }
+            return res.status(sc.OK).send(ut.success(sc.OK, "저장한 보드게임 조회 성공", savedGames));
+        } catch (error) {
+            console.error(error);
+            return res.status(sc.INTERNAL_SERVER_ERROR).send(ut.fail(sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR));
+        }
+    },
 }

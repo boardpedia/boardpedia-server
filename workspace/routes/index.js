@@ -9,5 +9,6 @@ router.get('/', function(req, res, next) {
 //router.use('/user', require('./user'))
 router.use('/game', require('./game'))
 //router.use('/theme', require('./theme'))
+//router.use('/auth', require('./auth'))
 
 module.exports = router;
