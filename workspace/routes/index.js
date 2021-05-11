@@ -6,16 +6,8 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-// User
-router.use('/user', require('./user'))
-// Game
+//router.use('/user', require('./user'))
 router.use('/game', require('./game'))
-// Theme
-router.use('/theme', require('./theme'))
-
-
-
-
-
+//router.use('/theme', require('./theme'))
 
 module.exports = router;
