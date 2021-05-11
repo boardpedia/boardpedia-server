@@ -75,4 +75,6 @@ module.exports = {
         }
     },
 
+    /* 전체 보드게임 조회하기 GET: [ /game] */
+
 }
