@@ -23,6 +23,12 @@ module.exports = (sequelize, DataTypes) => {
             unique: false,
             allowNull: true,
             defaultValue: ''
+        },
+        imageUrl : {
+            type: DataTypes.STRING(200),
+            unique: false,
+            allowNull: true,
+            defaultValue: ''
         }
     
         

@@ -1,5 +1,4 @@
 const sequelize = require('sequelize');
-const Op = sequelize.Op;
 
 const ut = require('../modules/util');
 const rm = require('../modules/responseMessage');
@@ -49,8 +48,8 @@ module.exports = {
         try {
             const saveGame = await gameService.saveGame(1, gameIdx);
             if (!saveGame) {
-                console.log('게임이 존재하지 않습니다!');
-                return res.status(sc.NOT_FOUND).send(ut.fail(sc.NOT_FOUND, "게임이 존재하지 않습니다!"));
+                console.log('이미 저장되어 있는 보드게임입니다');
+                return res.status(sc.NOT_FOUND).send(ut.fail(sc.NOT_FOUND, "이미 저장되어 있는 보드게임입니다"));
             }
             return res.status(sc.OK).send(ut.success(sc.OK, "보드게임 저장 성공"));
         } catch (error) {

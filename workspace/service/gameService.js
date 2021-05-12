@@ -74,7 +74,7 @@ module.exports = {
             
             const savedGame = await Saved.findAll({
                 where : {
-                    GameIdx: searchedGame[0].GameIdx,
+                    //GameIdx: searchedGame[0].GameIdx,
                     UserIdx: user.UserIdx,
                 },
                 attributes: ['GameIdx']
@@ -136,12 +136,22 @@ module.exports = {
                     UserIdx,
                 }
             });
-            
-            const saveGame = await Saved.create({
-                GameIdx
-            });
 
-            await user.addSaved(saveGame)
+            const check = await Saved.findOne({
+                where: {
+                    UserIdx,
+                    GameIdx
+                }
+            });
+            if (check) {
+                console.log('이미 저장된 보드게임입니다.')
+                return
+            } else {
+                const saveGame = await Saved.create({
+                    GameIdx
+                });
+                await user.addSaved(saveGame)
+            }
             return GameIdx;
         } catch (error) {
             throw error;
@@ -156,15 +166,27 @@ module.exports = {
                     UserIdx,
                 }
             });
-            
-            const saveGame = await Saved.destroy({
+
+            const check = await Saved.findOne({
                 where: {
-                    GameIdx,
+                    UserIdx,
+                    GameIdx
                 }
             });
-
-            await user.removeSaved(saveGame)
-            return saveGame;
+            
+            if (check) {
+                const saveGame = await Saved.destroy({
+                    where: {
+                        GameIdx,
+                    }
+                });
+                await user.removeSaved(saveGame)
+            } else {
+                console.log('보드게임이 저장되어 있지 않습니다.')
+                return
+                
+            }   
+            return GameIdx;
         } catch (error) {
             throw error;
         }
