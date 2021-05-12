@@ -9,10 +9,9 @@ const gameController = require('../../controller/gameController')
 
 /* 트렌딩 게임 조회하기	(인기 검색어 조회) */
 router.get('/trending', gameController.getTrending);
-/* 보드게임 검색하기 */
-//router.post('/search', gameController.searchGame);
-// /* 보드게임 검색 결과 조회	*/
-// router.get('/search', gameController);
+/* 보드게임 검색하기 및 결과 조회 */
+router.post('/search', gameController.searchGame);
+
 // /* 보드게임 추가하기 */
 // router.post('/add', gameController);
 

@@ -30,6 +30,11 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(100),
             unique: true,
             allowNull: true,
+        },
+        level: {
+            type: DataTypes.STRING(30),
+            unique: true,
+            allowNull: true,
         }
 
     }, {
