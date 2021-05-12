@@ -4,7 +4,7 @@ const ut = require('../modules/util');
 const rm = require('../modules/responseMessage');
 const sc = require('../modules/statusCode');
 
-const gameService = require('../service/gameService')
+const themeService = require('../service/themeService')
 
 module.exports = {
 

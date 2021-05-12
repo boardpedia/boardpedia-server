@@ -41,8 +41,8 @@ db.Boardgame.hasMany(db.Review,{onDelete:'cascade',foreignKey: 'GameIdx',sourceK
 db.Review.belongsTo(db.Boardgame,{foreignKey: 'GameIdx',targetKey:'GameIdx'})
 
 /* 1: N Theme: Boardgame */
-db.Boardgame.hasMany(db.Theme,{onDelete:'cascade',foreignKey: 'GameIdx',sourceKey:'GameIdx'})
-db.Theme.belongsTo(db.Boardgame,{foreignKey: 'GameIdx',targetKey:'GameIdx'})
+db.Theme.hasMany(db.Boardgame,{onDelete:'cascade',foreignKey: 'ThemeIdx',sourceKey:'ThemeIdx'})
+db.Boardgame.belongsTo(db.Theme,{foreignKey: 'ThemeIdx',targetKey:'ThemeIdx'})
 
 /* 1: 1 Boardgame: Saved */
 db.Boardgame.hasOne(db.Saved,{onDelete:'cascade',foreignKey: 'GameIdx',sourceKey:'GameIdx'})

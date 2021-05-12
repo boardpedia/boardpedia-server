@@ -15,7 +15,7 @@ module.exports = {
                     [sequelize.literal('RAND()')]
                   ],
                   limit: 3,
-                attributes: ['ThemeIdx', 'name', 'detail', 'tag'],
+                
             });
             
             return themes;
