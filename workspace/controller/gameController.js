@@ -1,4 +1,6 @@
 const sequelize = require('sequelize');
+const Op = sequelize.Op;
+
 const ut = require('../modules/util');
 const rm = require('../modules/responseMessage');
 const sc = require('../modules/statusCode');
@@ -23,17 +25,17 @@ module.exports = {
             return res.status(sc.INTERNAL_SERVER_ERROR).send(ut.fail(sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR));
         }
     },
-    /* 보드게임 검색하기 POST : [ /game/search ]*/
+    /* 보드게임 검색 및 결과조회 POST : [ /game/search ]*/
     searchGame: async (req, res) => {
-        // const {UserIdx} = req.decoded
+        //const {UserIdx} = req.decoded
         const { inputWord } = req.body;
         try {
-            const searchWord = await gameService.searchGame(inputWord);
+            const searchWord = await gameService.searchGame(2, inputWord);
             if (!searchWord) {
                 console.log('검색 결과가 없습니다!');
                 return res.status(sc.NOT_FOUND).send(ut.fail(sc.NOT_FOUND, "검색 결과가 없습니다!"));
             }
-            return res.status(sc.OK).send(ut.success(sc.OK, "보드게임 검색 성공"));
+            return res.status(sc.OK).send(ut.success(sc.OK, "보드게임 검색 성공", searchWord));
         } catch (error) {
             console.error(error);
             return res.status(sc.INTERNAL_SERVER_ERROR).send(ut.fail(sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR));

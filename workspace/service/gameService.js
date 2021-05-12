@@ -1,4 +1,8 @@
-const { Boardgame, User, Saved } = require('../models');
+const { Boardgame, User, Saved, Review } = require('../models');
+const { search } = require('../routes');
+const sequelize = require('sequelize');
+const Op = sequelize.Op;
+
 
 module.exports = {
 
@@ -46,28 +50,78 @@ module.exports = {
         }
     },
 
-    /* 보드게임 검색 */
-    searchGame: async (name) => {
+    /* 보드게임 검색 및 결과 조회 */
+    searchGame: async (UserIdx, name) => {
         try {
-            // const user = await User.findOne({
-            //     where: {
-            //         UserIdx,
-            //     }
-            // });
-            console.log('here')
+            const user = await User.findOne({
+            where: {
+                UserIdx
+            },
+            attributes: ['UserIdx']
+            });
+            console.log(user.UserIdx)
+            console.log(name)
+
             const searchedGame = await Boardgame.findAll({
                 where:{
-                    name: name
+                    // 유사한 이름도 검색 가능
+                    name: {
+                        [Op.like]: '%' + name + '%'
+                    }
                 },
                 attributes: ['GameIdx', 'name', 'intro', 'imageUrl'], 
-                // include: [{
-                //     model: Chat,
-                //     attributes: ['text']
-                // },
-                // ]
+            })
+            
+            const savedGame = await Saved.findAll({
+                where : {
+                    GameIdx: searchedGame[0].GameIdx,
+                    UserIdx: user.UserIdx,
+                },
+                attributes: ['GameIdx']
             })
 
-            return searchedGame;
+            const reviews = await Review.findAll({
+                // where:{
+                //     GameIdx: searchedGame[0].GameIdx,
+                // },
+                attributes: ['GameIdx', 'star']
+            })
+
+            for (i = 0; i < searchedGame.length; i++) { 
+                // for games in searchedGame, if GameIdx exists in savedGame, create new parameter in result
+                for (j = 0; j < savedGame.length; j++) { 
+                    if (searchedGame[i].GameIdx == savedGame[j].GameIdx) {
+                        searchedGame[i].dataValues.Saved = 1;
+                        console.log(searchedGame[i].GameIdx, savedGame[j].GameIdx)
+                    } else {
+                        searchedGame[i].dataValues.Saved = 0;
+                    }
+
+                }
+            }
+            // 저장된 게임의 결과가 없을 경우 다 save = 0 으로 표시
+            if (savedGame.length == 0) {
+                for (i = 0; i < searchedGame.length; i++) { 
+                    searchedGame[i].dataValues.Saved = 0;
+                }
+            }
+            // 후기 별점 평균 구해서 새로 파라미터 추가해주기
+            console.log(searchedGame)
+
+            // for (i = 0; i < reviews.length; i++) { 
+            //     for (j = 0; j < searchedGame.length; j++) { 
+            //         if (reviews[i].GameIdx == searchedGame[j].GameIdx) {
+
+            //     }
+
+            // }
+
+            //console.log(savedGame.length)
+            const result = ({
+                searchedGame, 
+                reviews
+            });
+            return result;
         } catch (error) {
             throw error;
         }
@@ -136,6 +190,24 @@ module.exports = {
                     }, 
                 }]
             });
+
+            // const userReply = await ChatDetails.findAll({
+            //     where:{
+            //         day: day,
+            //     },
+            //     attributes: ['ChatDetailsIdx'],
+            //     include: [
+            //     {
+            //         model: Reply,
+            //         where: {
+            //             UserIdx: user.UserIdx,
+            //         },
+            //         attributes: ['replyString', 'replyFile']
+            //     }]
+            // })
+            // const trendingGame = ({
+            //     trendingGame
+            // });
 
             return allGames;
         } catch (error) {
