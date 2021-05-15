@@ -22,4 +22,20 @@ module.exports = {
             return res.status(sc.INTERNAL_SERVER_ERROR).send(ut.fail(sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR));
         }
     },
+
+    /* 오늘의 추천 테마 상세 조회  GET : [ /theme/:themeIdx] */
+    getThemeDetail: async (req, res) => {
+        const themeIdx = req.params.themeIdx
+        try {
+            const themes = await themeService.getThemeDetail(themeIdx);
+            if (!themes) {
+                console.log('테마가 없습니다');
+                return res.status(sc.INTERNAL_SERVER_ERROR).send(ut.fail(sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR));
+            }
+            return res.status(sc.OK).send(ut.success(sc.OK, "오늘의 추천 테마 조회 성공", themes));
+        } catch (error) {
+            console.error(error);
+            return res.status(sc.INTERNAL_SERVER_ERROR).send(ut.fail(sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR));
+        }
+    },
 }

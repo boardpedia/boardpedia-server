@@ -11,7 +11,7 @@ const themeController = require('../../controller/themeController')
 router.get('/', themeController.getTheme);
 
 /* 오늘의 추천 테마 상세 조회 */
-//router.get('/theme/:themeIdx', themeController.getThemeDetail);
+router.get('/:themeIdx', themeController.getThemeDetail);
 
 
 module.exports = router;
