@@ -41,7 +41,7 @@ module.exports = {
         }
     },
 
-    /* 보드게임 저장하기 POST: [ /game/save/:gameIdx ] */
+    /* 보드게임 저장하기 POST: [ /game/save ] */
     saveGame: async (req, res) => {
         // const {UserIdx} = req.decoded
         const { gameIdx } = req.body;
@@ -59,7 +59,7 @@ module.exports = {
     },
 
 
-    /* 보드게임 저장 취소하기 DELETE: [ /game/save/:gameIdx] */
+    /* 보드게임 저장 취소하기 DELETE: [ /game/save] */
     saveGameUndo: async (req, res) => {
         // const {UserIdx} = req.decoded
         const { gameIdx } = req.body;
