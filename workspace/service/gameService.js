@@ -80,10 +80,11 @@ module.exports = {
 
             // 게임당 저장 회수 리턴
             const savedGameCount = await Saved.findAll({
+                attributes: ['GameIdx', [sequelize.fn('COUNT', 'GameIdx'), 'count']],
                 group: ['GameIdx'],
-                attributes: ['GameIdx', [sequelize.fn('COUNT', 'GameIdx'), 'count']]
-            
             })
+
+            savedGameCount.count = savedGameCount.count
 
             console.log(savedGameCount.count, 'yesssss')
 
@@ -138,13 +139,11 @@ module.exports = {
                 
             }
 
-
-        
             const result = ({
                 searchedGame, 
                 savedGameCount
             });
-            return result;
+            return searchedGame;
         } catch (error) {
             throw error;
         }
