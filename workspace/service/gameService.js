@@ -175,37 +175,34 @@ module.exports = {
                 }
             });
 
-            const allGames = await Boardgame.findAll({
+            const searchedGame = await Boardgame.findAll({
                 attributes: ['GameIdx', 'name', 'intro', 'imageUrl'], 
-                
-                include: [{
-                    model: Saved,
-                    attributes: ['UserIdx'],
-                    where : {
-                        UserIdx,
-                    }, 
-                }]
-            });
+            })
 
-            // const userReply = await ChatDetails.findAll({
-            //     where:{
-            //         day: day,
-            //     },
-            //     attributes: ['ChatDetailsIdx'],
-            //     include: [
-            //     {
-            //         model: Reply,
-            //         where: {
-            //             UserIdx: user.UserIdx,
-            //         },
-            //         attributes: ['replyString', 'replyFile']
-            //     }]
+            // 유저가 저장한 게임만 리턴
+            const savedGame = await Saved.findAll({
+                where : {
+                    UserIdx: user.UserIdx,
+                },
+                attributes: ['GameIdx']
+            })
+
+            // 게임당 저장 회수 리턴
+            const savedGameCount = await Saved.findAll({
+                attributes: ['GameIdx', [sequelize.fn('COUNT', 'GameIdx'), 'count']],
+                group: ['GameIdx'],
+            })
+
+            const reviews = await Review.findAll({
+                attributes: ['GameIdx', 'star']
+            })
+            // const reviews = await Review.findAll({
+            //     attributes: ['GameIdx', [sequelize.fn('sum', sequelize.col('GameIdx')), 'sum']],
+            //     group: ['star'],
             // })
-            // const trendingGame = ({
-            //     trendingGame
-            // });
 
-            return allGames;
+            const result = await commonService.getSavedCountReview(searchedGame, savedGame, savedGameCount, reviews)
+            return result;
         } catch (error) {
             throw error;
         }
