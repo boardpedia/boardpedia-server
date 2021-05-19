@@ -25,9 +25,10 @@ module.exports = {
 
     /* 오늘의 추천 테마 상세 조회  GET : [ /theme/:themeIdx] */
     getThemeDetail: async (req, res) => {
+        const UserIdx = req.decoded
         const themeIdx = req.params.themeIdx
         try {
-            const themes = await themeService.getThemeDetail(2, themeIdx);
+            const themes = await themeService.getThemeDetail(UserIdx.UserIdx, themeIdx);
             if (!themes) {
                 console.log('테마가 없습니다');
                 return res.status(sc.NOT_FOUND).send(ut.fail(sc.NOT_FOUND, rm.NOT_FOUND));
