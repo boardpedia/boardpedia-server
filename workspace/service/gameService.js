@@ -10,41 +10,14 @@ module.exports = {
     /* 트렌딩 게임 조회 */
     getTrending: async () => {
         try {
-            // const user = await User.findOne({
-            // where: {
-            //     UserIdx
-            // },
-            // attributes: ['UserIdx']
-            // });
 
             const trendingGame = await Boardgame.findAll({
                 // where:{
                 //     day: day,
                 // },
                 attributes: ['GameIdx', 'name', 'intro', 'imageUrl'], 
-                // include: [{
-                //     model: Chat,
-                //     attributes: ['text']
-                // },
-                // ]
+                limit: 7
             })
-            // const userReply = await ChatDetails.findAll({
-            //     where:{
-            //         day: day,
-            //     },
-            //     attributes: ['ChatDetailsIdx'],
-            //     include: [
-            //     {
-            //         model: Reply,
-            //         where: {
-            //             UserIdx: user.UserIdx,
-            //         },
-            //         attributes: ['replyString', 'replyFile']
-            //     }]
-            // })
-            // const trendingGame = ({
-            //     trendingGame
-            // });
             return trendingGame;
         } catch (error) {
             throw error;
@@ -60,6 +33,7 @@ module.exports = {
                 },
                 attributes: ['UserIdx']
             });
+            console.log('esss')
 
             const searchedGame = await Boardgame.findAll({
                 where:{

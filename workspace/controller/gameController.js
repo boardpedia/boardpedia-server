@@ -11,7 +11,7 @@ module.exports = {
     /* 트렌딩 게임 조회하기  GET : [ /game/trending] */
     getTrending: async (req, res) => {
         // const day = req.params.day;
-        // const {UserIdx} = req.decoded
+        const {UserIdx} = req.decoded
         try {
             const trendingGames = await gameService.getTrending();
             if (!trendingGames) {
@@ -26,10 +26,11 @@ module.exports = {
     },
     /* 보드게임 검색 및 결과조회 POST : [ /game/search ]*/
     searchGame: async (req, res) => {
-        //const {UserIdx} = req.decoded
+        const { UserIdx } = req.decoded
+        console.log(UserIdx)
         const { inputWord } = req.body;
         try {
-            const searchWord = await gameService.searchGame(2, inputWord);
+            const searchWord = await gameService.searchGame(UserIdx, inputWord);
             if (!searchWord) {
                 console.log('검색 결과가 없습니다!');
                 return res.status(sc.NOT_FOUND).send(ut.fail(sc.NOT_FOUND, "검색 결과가 없습니다!"));
@@ -43,10 +44,10 @@ module.exports = {
 
     /* 보드게임 저장하기 POST: [ /game/save ] */
     saveGame: async (req, res) => {
-        // const {UserIdx} = req.decoded
+        const { UserIdx } = req.decoded
         const { gameIdx } = req.body;
         try {
-            const saveGame = await gameService.saveGame(1, gameIdx);
+            const saveGame = await gameService.saveGame(UserIdx, gameIdx);
             if (!saveGame) {
                 console.log('이미 저장되어 있는 보드게임입니다');
                 return res.status(sc.NOT_FOUND).send(ut.fail(sc.NOT_FOUND, "이미 저장되어 있는 보드게임입니다"));
@@ -61,13 +62,13 @@ module.exports = {
 
     /* 보드게임 저장 취소하기 DELETE: [ /game/save] */
     saveGameUndo: async (req, res) => {
-        // const {UserIdx} = req.decoded
+        const { UserIdx } = req.decoded
         const { gameIdx } = req.body;
         try {
-            const saveGame = await gameService.saveGameUndo(1, gameIdx);
+            const saveGame = await gameService.saveGameUndo(UserIdx, gameIdx);
             if (!saveGame) {
-                console.log('보드게임이 저장돼있지 않습니다!');
-                return res.status(sc.NOT_FOUND).send(ut.fail(sc.NOT_FOUND, "보드게임이 저장돼있지 않습니다!"));
+                console.log('보드게임이 저장되어있지 않습니다!');
+                return res.status(sc.NOT_FOUND).send(ut.fail(sc.NOT_FOUND, "보드게임이 저장되어있지 않습니다!"));
             }
             return res.status(sc.OK).send(ut.success(sc.OK, "보드게임 저장 취소 성공"));
         } catch (error) {
@@ -79,10 +80,10 @@ module.exports = {
     /* 전체 보드게임 조회하기 GET: [ /game/pageIdx] */
     getBoardgames: async (req, res) => {
         // const day = req.params.day;
-        // const {UserIdx} = req.decoded
+        const { UserIdx } = req.decoded
         const pageIdx = req.params.pageIdx
         try {
-            const allgames = await gameService.getBoardgames(1, pageIdx);
+            const allgames = await gameService.getBoardgames(UserIdx, pageIdx);
             if (!allgames) {
                 console.log('보드게임이 없습니다!');
                 return res.status(sc.NO_CONTENT).send(ut.fail(sc.NO_CONTENT, "보드게임이 없습니다!"));
@@ -96,11 +97,9 @@ module.exports = {
 
     /* 저장한 보드게임 조회하기 GET: [ /game/saved ] */
     getSavedGames: async (req, res) => {
-        // const day = req.params.day;
-        // const {UserIdx} = req.decoded
-        
+        const { UserIdx } = req.decoded
         try {
-            const savedGames = await gameService.getSavedGames(1);
+            const savedGames = await gameService.getSavedGames(UserIdx);
             if (!savedGames) {
                 console.log('보드게임이 없습니다!');
                 return res.status(sc.NO_CONTENT).send(ut.fail(sc.NO_CONTENT, "보드게임이 없습니다!"));
