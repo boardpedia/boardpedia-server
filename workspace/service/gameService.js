@@ -57,6 +57,7 @@ module.exports = {
             const savedGameCount = await Saved.findAll({
                 attributes: ['GameIdx', [sequelize.fn('COUNT', 'GameIdx'), 'count']],
                 group: ['GameIdx'],
+                raw: true
             })
 
             const reviews = await Review.findAll({
@@ -165,6 +166,7 @@ module.exports = {
             const savedGameCount = await Saved.findAll({
                 attributes: ['GameIdx', [sequelize.fn('COUNT', 'GameIdx'), 'count']],
                 group: ['GameIdx'],
+                raw: true
             })
 
             const reviews = await Review.findAll({
@@ -208,6 +210,50 @@ module.exports = {
             });
 
             return allGames;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+
+    /* 보드게임 필터 검색 조회 POST : [ game/filter] */
+    filterGame: async (UserIdx, playerNum, level, tag, duration) => {
+        try {
+            const user = await User.findOne({
+                where: {
+                    UserIdx,
+                }
+            });
+
+            const searchedGame = await Boardgame.findAll({
+                attributes: ['GameIdx', 'name', 'intro', 'imageUrl'], 
+            })
+
+            // 유저가 저장한 게임만 리턴
+            const savedGame = await Saved.findAll({
+                where : {
+                    UserIdx: user.UserIdx,
+                },
+                attributes: ['GameIdx']
+            })
+
+            // 게임당 저장 회수 리턴
+            const savedGameCount = await Saved.findAll({
+                attributes: ['GameIdx', [sequelize.fn('COUNT', 'GameIdx'), 'count']],
+                group: ['GameIdx'],
+                raw: true
+            })
+
+            const reviews = await Review.findAll({
+                attributes: ['GameIdx', 'star']
+            })
+            // const reviews = await Review.findAll({
+            //     attributes: ['GameIdx', [sequelize.fn('sum', sequelize.col('GameIdx')), 'sum']],
+            //     group: ['star'],
+            // })
+
+            const result = await commonService.getSavedCountReview(searchedGame, savedGame, savedGameCount, reviews)
+            return result;
         } catch (error) {
             throw error;
         }

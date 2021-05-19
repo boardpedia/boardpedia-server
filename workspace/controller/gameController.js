@@ -110,4 +110,27 @@ module.exports = {
             return res.status(sc.INTERNAL_SERVER_ERROR).send(ut.fail(sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR));
         }
     },
+
+    /* 보드게임 필터 조회 POST : [ /game/filter ]*/
+    filterGame: async (req, res) => {
+        const { UserIdx } = req.decoded
+        const {
+            playerNum,
+            level,
+            tag,
+            duration
+        } = req.body;
+
+        try {
+            const searchedGame = await gameService.filterGame(UserIdx, playerNum, level, tag, duration);
+            if (!searchedGame) {
+                console.log('검색 결과가 없습니다!');
+                return res.status(sc.NOT_FOUND).send(ut.fail(sc.NOT_FOUND, "검색 결과가 없습니다!"));
+            }
+            return res.status(sc.OK).send(ut.success(sc.OK, "보드게임 검색 성공", searchedGame));
+        } catch (error) {
+            console.error(error);
+            return res.status(sc.INTERNAL_SERVER_ERROR).send(ut.fail(sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR));
+        }
+    },
 }

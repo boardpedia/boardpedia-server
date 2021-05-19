@@ -8,7 +8,6 @@ const Op = sequelize.Op;
 module.exports = {
     getSavedCountReview: async (searchedGame, savedGame, savedGameCount, reviews) => {
         try {
-            
             for (i = 0; i < searchedGame.length; i++) { 
                 // 'saved': 저장 여부 파라미터 추가해주기
                 searchedGame[i].dataValues.saved = 0;
@@ -44,8 +43,8 @@ module.exports = {
                 // 저장 카운트 매핑해주기
                 for (j = 0; j < savedGameCount.length; j++) { 
                     if (searchedGame[i].GameIdx == savedGameCount[j].GameIdx) {
-                        console.log(searchedGame[i].GameIdx, savedGameCount[j].GameIdx)
-                        console.log(savedGameCount[j].count)
+                        // console.log(searchedGame[i].GameIdx, savedGameCount[j].GameIdx,savedGameCount[j].count, 'es')
+                        // console.log(savedGameCount[j])
                         searchedGame[i].dataValues.saveCount = searchedGame[i].dataValues.saveCount + savedGameCount[j].count
                     }
                 }
