@@ -76,12 +76,13 @@ module.exports = {
         }
     },
 
-    /* 전체 보드게임 조회하기 GET: [ /game] */
+    /* 전체 보드게임 조회하기 GET: [ /game/pageIdx] */
     getBoardgames: async (req, res) => {
         // const day = req.params.day;
         // const {UserIdx} = req.decoded
+        const pageIdx = req.params.pageIdx
         try {
-            const allgames = await gameService.getBoardgames(1);
+            const allgames = await gameService.getBoardgames(1, pageIdx);
             if (!allgames) {
                 console.log('보드게임이 없습니다!');
                 return res.status(sc.NO_CONTENT).send(ut.fail(sc.NO_CONTENT, "보드게임이 없습니다!"));
@@ -97,6 +98,7 @@ module.exports = {
     getSavedGames: async (req, res) => {
         // const day = req.params.day;
         // const {UserIdx} = req.decoded
+        
         try {
             const savedGames = await gameService.getSavedGames(1);
             if (!savedGames) {

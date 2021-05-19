@@ -167,7 +167,7 @@ module.exports = {
     },
 
     /* 보드게임 전체 조회 GET : [ /game] */
-    getBoardgames: async (UserIdx) => {
+    getBoardgames: async (UserIdx, pageIdx) => {
         try {
             const user = await User.findOne({
                 where: {
@@ -201,7 +201,9 @@ module.exports = {
             //     group: ['star'],
             // })
 
-            const result = await commonService.getSavedCountReview(searchedGame, savedGame, savedGameCount, reviews)
+            const left = pageIdx * 10
+            const right = pageIdx * 10 + 10
+            const result = await commonService.getSavedCountReview(searchedGame.slice(left, right), savedGame, savedGameCount, reviews)
             return result;
         } catch (error) {
             throw error;

@@ -24,7 +24,7 @@ router.delete('/save', gameController.saveGameUndo);
 router.get('/saved', gameController.getSavedGames);
 
 /* 전체 보드게임 조회하기 */
-router.get('/', gameController.getBoardgames);
+router.get('/:pageIdx', gameController.getBoardgames);
 
 
 module.exports = router;
