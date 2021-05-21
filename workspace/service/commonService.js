@@ -43,11 +43,11 @@ module.exports = {
                 // 저장 카운트 매핑해주기
                 for (j = 0; j < savedGameCount.length; j++) { 
                     if (searchedGame[i].GameIdx == savedGameCount[j].GameIdx) {
-                        // console.log(searchedGame[i].GameIdx, savedGameCount[j].GameIdx,savedGameCount[j].count, 'es')
-                        // console.log(savedGameCount[j])
                         searchedGame[i].dataValues.saveCount = searchedGame[i].dataValues.saveCount + savedGameCount[j].count
                     }
                 }
+
+                
                 
             }
 

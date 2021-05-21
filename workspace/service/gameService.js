@@ -1,7 +1,8 @@
-const { Boardgame, User, Saved, Review } = require('../models');
+const { Boardgame, BoardgameDetail, User, Saved, Review } = require('../models');
 const commonService = require('../service/commonService')
 const { search } = require('../routes');
 const sequelize = require('sequelize');
+const gameDetail = require('../models/gameDetail');
 const Op = sequelize.Op;
 
 
@@ -225,8 +226,20 @@ module.exports = {
                 }
             });
 
+            // playerNum: [0, 1] or [2, 4]
+            const minplayer = playerNum[0]
+            const maxplayer = playerNum[1]
+
+            const playTime = duration
+
             const searchedGame = await Boardgame.findAll({
                 attributes: ['GameIdx', 'name', 'intro', 'imageUrl'], 
+                where : {
+                    playerNum: {
+                        [Op.like]: '%' + playerNum + '%'
+                    }
+                }
+                
             })
 
             // 유저가 저장한 게임만 리턴
@@ -254,6 +267,89 @@ module.exports = {
 
             const result = await commonService.getSavedCountReview(searchedGame, savedGame, savedGameCount, reviews)
             return result;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    /* 보드게임 상세 조회 GET : [ /game/gameIdx] */
+    getBoardgameDetail: async (UserIdx, GameIdx) => {
+        try {
+            const user = await User.findOne({
+                where: {
+                    UserIdx,
+                },
+                
+            });
+
+            const searchedGame = await Boardgame.findOne({
+                attributes: ['GameIdx', 'name', 'intro', 'imageUrl', 'tag'], 
+                where: {
+                    GameIdx,
+                },
+
+            })
+
+            const gameDetail = await BoardgameDetail.findOne({
+                attributes: ['objective', 'method', 'webUrl'], 
+                where: {
+                    GameIdx,
+                },
+            })
+
+            var res = searchedGame.tag.split("; ");
+            searchedGame.tag = res
+            
+            // 저장 여부 파라미터
+            searchedGame.dataValues.saved = 0;
+
+            // 별점 파라미터
+            searchedGame.dataValues.star = 0;
+
+            // 게임 목적 파라미터
+            searchedGame.dataValues.objective = gameDetail.objective;
+
+            // 게임 링크 파라미터
+            searchedGame.dataValues.webUrl = gameDetail.webUrl;
+
+            // 게임 플레이 방식 파라미터
+            searchedGame.dataValues.method = gameDetail.method;
+
+            // 유저가 저장한 게임만 리턴
+            const savedGame = await Saved.findAll({
+                where : {
+                    UserIdx: user.UserIdx,
+                },
+                attributes: ['GameIdx']
+            })
+
+            // 전체 후기 가져오기
+            const reviews = await Review.findAll({
+                attributes: ['GameIdx', 'star']
+            })
+
+            // 저장 여부 
+            for (j = 0; j < savedGame.length; j++) { 
+                if (searchedGame.GameIdx == savedGame[j].GameIdx) {
+                    searchedGame.dataValues.saved = 1;
+                } else {
+                    searchedGame.dataValues.saved = 0;
+                }
+            }
+
+            var cnt = 0
+            // 후기 별점 계산
+            for (j = 0; j < reviews.length; j++) { 
+                if (searchedGame.GameIdx == reviews[j].GameIdx) {
+                    cnt ++
+                    searchedGame.dataValues.star = searchedGame.dataValues.star + reviews[j].star
+                } 
+            }
+            if (cnt > 0) {
+                searchedGame.dataValues.star =  searchedGame.dataValues.star / cnt
+            }
+            
+            return searchedGame;
         } catch (error) {
             throw error;
         }

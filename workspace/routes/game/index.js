@@ -27,4 +27,7 @@ router.get('/:pageIdx', authUtils.checkToken, gameController.getBoardgames);
 /* 조건에 맞는 보드게임 조회하기 */
 router.post('/filter', authUtils.checkToken, gameController.filterGame);
 
+/* 보드게임 상세 조회하기 */
+router.get('/detail/:gameIdx', authUtils.checkToken, gameController.getBoardgameDetail);
+
 module.exports = router;
