@@ -29,6 +29,9 @@ db.User.hasMany(db.Saved,{onDelete:'cascade',foreignKey: 'UserIdx',sourceKey:'Us
 db.Saved.belongsTo(db.User,{foreignKey: 'UserIdx',targetKey:'UserIdx'});
 
 /* 1: N User:Review */
+// db.User.belongsToMany(db.Review, { through: 'User_Review' });
+// db.Review.belongsToMany(db.User, { through: 'User_Review' });
+
 db.User.hasMany(db.Review,{onDelete:'cascade',foreignKey: 'UserIdx',sourceKey:'UserIdx'})
 db.Review.belongsTo(db.User,{foreignKey: 'UserIdx',targetKey:'UserIdx'})
 

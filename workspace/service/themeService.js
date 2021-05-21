@@ -74,6 +74,7 @@ module.exports = {
             const savedGameCount = await Saved.findAll({
                 attributes: ['GameIdx', [sequelize.fn('COUNT', 'GameIdx'), 'count']],
                 group: ['GameIdx'],
+                raw: true
             })
 
             savedGameCount.count = savedGameCount.count
