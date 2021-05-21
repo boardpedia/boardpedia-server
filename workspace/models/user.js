@@ -33,8 +33,9 @@ module.exports = (sequelize, DataTypes) => {
         },
         level: {
             type: DataTypes.STRING(30),
-            unique: true,
+            unique: false,
             allowNull: true,
+            defaultValue: 1
         }
 
     }, {
