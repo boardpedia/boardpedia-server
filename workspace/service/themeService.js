@@ -16,7 +16,7 @@ module.exports = {
                 order: [
                     [sequelize.literal('RAND()')]
                 ],
-                limit: 3,
+                limit: 9,
                 attributes: ['ThemeIdx', 'name', 'detail', 'tag', 'imageUrl']
                 
             });
