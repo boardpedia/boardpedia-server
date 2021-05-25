@@ -226,20 +226,28 @@ module.exports = {
                 }
             });
 
-            // playerNum: [0, 1] or [2, 4]
-            const minplayer = playerNum[0]
-            const maxplayer = playerNum[1]
+            //const durationTime = duration.slice(0, -1)
+            
+            // 입력된 데이터 값만 받아주기
+            const paramName = ['playerNum', 'level', 'tag', 'duration']
+            var params = [playerNum, level, tag, duration]
+            const databaseParams = {}
+            
+            for (j = 0; j < params.length; j++) { 
+                if (params[j].length != 0 && params[j] != 0) {
+                    databaseParams[paramName[j]] = params[j];
+                }
+            }
 
-            const playTime = duration
+            console.log(databaseParams)
 
             const searchedGame = await Boardgame.findAll({
                 attributes: ['GameIdx', 'name', 'intro', 'imageUrl'], 
                 where : {
-                    playerNum: {
-                        [Op.like]: '%' + playerNum + '%'
-                    }
-                }
-                
+                    [Op.and]: [
+                        databaseParams
+                    ],
+                },
             })
 
             // 유저가 저장한 게임만 리턴
