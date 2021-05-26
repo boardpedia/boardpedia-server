@@ -229,8 +229,8 @@ module.exports = {
             //const durationTime = duration.slice(0, -1)
             
             // 입력된 데이터 값만 받아주기
-            const paramName = ['playerNum', 'level', 'tag', 'duration']
-            var params = [playerNum, level, tag, duration]
+            const paramName = ['level', 'duration']
+            var params = [level, duration]
             const databaseParams = {}
             
             for (j = 0; j < params.length; j++) { 
@@ -238,16 +238,17 @@ module.exports = {
                     databaseParams[paramName[j]] = params[j];
                 }
             }
-
+            var ex = "2명-4명"
             console.log(databaseParams)
 
             const searchedGame = await Boardgame.findAll({
-                attributes: ['GameIdx', 'name', 'intro', 'imageUrl'], 
+                attributes: ['GameIdx', 'name', 'intro', 'imageUrl', 'tag'], 
                 where : {
                     [Op.and]: [
-                        databaseParams
+                        databaseParams,
                     ],
                 },
+                
             })
 
             // 유저가 저장한 게임만 리턴
