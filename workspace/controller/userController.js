@@ -61,4 +61,21 @@ module.exports = {
             return res.status(sc.INTERNAL_SERVER_ERROR).send(ut.fail(sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR));
         }
     },
+
+    /* 플레이한 보드게임 GET: [ user/played ] */
+    getPlayedGames: async (req, res) => {
+        const { UserIdx } = req.decoded
+        try {
+            const gameReview = await userService.getPlayedGames(UserIdx);
+            if (!gameReview) {
+                console.log('플레이한 보드게임이 없습니다!');
+                return res.status(sc.NO_CONTENT).send(ut.fail(sc.NO_CONTENT, "플레이한 보드게임이 없습니다!"));
+            }
+            return res.status(sc.OK).send(ut.success(sc.OK, "플레이한 보드게임 조회 성공", gameReview));
+        } catch (error) {
+            console.error(error);
+            return res.status(sc.INTERNAL_SERVER_ERROR).send(ut.fail(sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR));
+        }
+    },
+
 }

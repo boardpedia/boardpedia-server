@@ -362,73 +362,7 @@ module.exports = {
     },
 
 
-    /* 보드게임 후기 조회 GET : [ /game/review/:gameIdx] */
-    getBoardgameReviews: async (UserIdx, GameIdx) => {
-        try {
-            const user = await User.findOne({
-                where: {
-                    UserIdx,
-                }
-            });
-
-            const reviews = await Review.findAll({
-                attributes: ['ReviewIdx', 'star', 'keyword'], 
-                where : {
-                    GameIdx,
-                }, 
-                include: [{
-                    model: User,
-                    attributes: ['UserIdx', 'nickName', 'level'], 
-                }],
-            });
-            
-            var cnt = 0
-            var summ = 0
-            var total = 0
-            var keywordCount = {}
-
-            // 후기 별점 계산
-            for (j = 0; j <= reviews.length - 1; j++) { 
-                cnt ++
-                summ = summ + reviews[j].star
-                var res = reviews[j].keyword.split("; ");
-                reviews[j].keyword = res
-                for (r = 0; r <= res.length - 1; r++) {
-                    if (!(res[r] in keywordCount)) {
-                        keywordCount[res[r]] = 0;
-                    }
-                    keywordCount[res[r]]++;
-                }
-               
-            } 
-            console.log(keywordCount)
-
-            if (cnt > 0) {
-                total = summ / cnt
-            }
-            total = Math.round((total + Number.EPSILON) * 100) / 100
-
-            var topkeywords = []
-            
-
-            if (keywordCount) {
-                keywordCount
-                topkeywords.push(keywordCount)
-            }
-
-
-            const result = {
-                totalStar: total,
-                keywords: topkeywords,
-                reviews
-            }
-
-            return result;
-        } catch (error) {
-            throw error;
-        }
-    },
-
+    
     
     
 
