@@ -120,6 +120,7 @@ module.exports = {
             tag,
             duration
         } = req.body;
+        console.log(playerNum, level, tag, duration)
 
         try {
             const searchedGame = await gameService.filterGame(UserIdx, playerNum, level, tag, duration);
@@ -127,7 +128,7 @@ module.exports = {
                 console.log('검색 결과가 없습니다!');
                 return res.status(sc.NOT_FOUND).send(ut.fail(sc.NOT_FOUND, "검색 결과가 없습니다!"));
             }
-            return res.status(sc.OK).send(ut.success(sc.OK, "보드게임 검색 성공", searchedGame));
+            return res.status(sc.OK).send(ut.success(sc.OK, "보드게임 조건 검색 성공", searchedGame));
         } catch (error) {
             console.error(error);
             return res.status(sc.INTERNAL_SERVER_ERROR).send(ut.fail(sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR));
@@ -151,20 +152,4 @@ module.exports = {
         }
     },
 
-    /* 보드게임 후기 조회 GET: [ /review/:gameIdx ] */
-    getGameReviews: async (req, res) => {
-        const { UserIdx } = req.decoded
-        const { gameIdx } = req.params
-        try {
-            const gameReview = await gameService.getBoardgameReviews(UserIdx, gameIdx);
-            if (!gameReview) {
-                console.log('보드게임이 없습니다!');
-                return res.status(sc.NO_CONTENT).send(ut.fail(sc.NO_CONTENT, "후기가 없습니다!"));
-            }
-            return res.status(sc.OK).send(ut.success(sc.OK, "보드게임 후기 조회 성공", gameReview));
-        } catch (error) {
-            console.error(error);
-            return res.status(sc.INTERNAL_SERVER_ERROR).send(ut.fail(sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR));
-        }
-    },
 }

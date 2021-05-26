@@ -15,7 +15,8 @@ const {
 
 /** alter: true를 해줘야 데이터베이스에 수정이 반영됨 */
 sequelize.sync({
-  alter: true,
+  alter: false,
+  // force: true
 })
 .then(() => {
   console.log('데이터베이스 연결 성공.');

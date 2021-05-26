@@ -27,16 +27,16 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true,
         },
         refreshToken: {
-            type: DataTypes.STRING(100),
+            type: DataTypes.STRING(200),
             unique: true,
             allowNull: true,
         },
         level: {
-            type: DataTypes.STRING(30),
+            type: DataTypes.STRING(10),
             unique: false,
-            allowNull: true,
-            defaultValue: 1
-        }
+            allowNull: false,
+            defaultValue: '보드신입생',
+        },
 
     }, {
         //모델의 옵션들을 지정하는곳   

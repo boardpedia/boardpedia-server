@@ -226,19 +226,28 @@ module.exports = {
                 }
             });
 
-            // playerNum: [0, 1] or [2, 4]
-            const minplayer = playerNum[0]
-            const maxplayer = playerNum[1]
-
-            const playTime = duration
+            //const durationTime = duration.slice(0, -1)
+            
+            // 입력된 데이터 값만 받아주기
+            const paramName = ['level', 'duration']
+            var params = [level, duration]
+            const databaseParams = {}
+            
+            for (j = 0; j < params.length; j++) { 
+                if (params[j].length != 0 && params[j] != 0) {
+                    databaseParams[paramName[j]] = params[j];
+                }
+            }
+            var ex = "2명-4명"
+            console.log(databaseParams)
 
             const searchedGame = await Boardgame.findAll({
-                attributes: ['GameIdx', 'name', 'intro', 'imageUrl'], 
+                attributes: ['GameIdx', 'name', 'intro', 'imageUrl', 'tag'], 
                 where : {
-                    playerNum: {
-                        [Op.like]: '%' + playerNum + '%'
-                    }
-                }
+                    [Op.and]: [
+                        databaseParams,
+                    ],
+                },
                 
             })
 
@@ -353,73 +362,7 @@ module.exports = {
     },
 
 
-    /* 보드게임 후기 조회 GET : [ /game/review/:gameIdx] */
-    getBoardgameReviews: async (UserIdx, GameIdx) => {
-        try {
-            const user = await User.findOne({
-                where: {
-                    UserIdx,
-                }
-            });
-
-            const reviews = await Review.findAll({
-                attributes: ['ReviewIdx', 'star', 'keyword'], 
-                where : {
-                    GameIdx,
-                }, 
-                include: [{
-                    model: User,
-                    attributes: ['UserIdx', 'nickName', 'level'], 
-                }],
-            });
-            
-            var cnt = 0
-            var summ = 0
-            var total = 0
-            var keywordCount = {}
-
-            // 후기 별점 계산
-            for (j = 0; j <= reviews.length - 1; j++) { 
-                cnt ++
-                summ = summ + reviews[j].star
-                var res = reviews[j].keyword.split("; ");
-                reviews[j].keyword = res
-                for (r = 0; r <= res.length - 1; r++) {
-                    if (!(res[r] in keywordCount)) {
-                        keywordCount[res[r]] = 0;
-                    }
-                    keywordCount[res[r]]++;
-                }
-               
-            } 
-            console.log(keywordCount)
-
-            if (cnt > 0) {
-                total = summ / cnt
-            }
-            total = Math.round((total + Number.EPSILON) * 100) / 100
-
-            var topkeywords = []
-            
-
-            if (keywordCount) {
-                keywordCount
-                topkeywords.push(keywordCount)
-            }
-
-
-            const result = {
-                totalStar: total,
-                keywords: topkeywords,
-                reviews
-            }
-
-            return result;
-        } catch (error) {
-            throw error;
-        }
-    },
-
+    
     
     
 
