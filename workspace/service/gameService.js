@@ -362,6 +362,84 @@ module.exports = {
     },
 
 
+    /* 보드게임 후기 조회 GET : [ /review/:gameIdx] */
+    getGameReviews: async (UserIdx, GameIdx) => {
+        try {
+            const user = await User.findOne({
+                where: {
+                    UserIdx,
+                }
+            });
+
+            // 각 리뷰 가져오기
+            const reviews = await Review.findAll({ 
+                where : {
+                    GameIdx,
+                }, 
+                attributes : ['ReviewIdx', 'star', 'keyword', 'createdAt'],
+
+                include: [{
+                    model: User,
+                    attributes : ['UserIdx', 'nickName', 'level'],
+                }]
+
+            });
+
+            // 키워드 배열로 변환
+            for (i = 0; i < reviews.length; i++) {
+                var res = reviews[i].keyword.split(";");
+                reviews[i].keyword = res
+            }
+
+            // 총 평점과 키워드 빈도수 계산하기
+            var cnt = 0
+            var starSum = 0
+            var keywordCount = {}
+
+            for (j = 0; j < reviews.length; j++) { 
+                cnt ++
+                starSum = starSum + reviews[j].dataValues.star
+                eachKeyword = reviews[j].dataValues.keyword
+                for (i = 0; i < eachKeyword.length; i++) {
+                    keywordCount[eachKeyword[i]] = (keywordCount[eachKeyword[i]] + 1) || 1 ;
+                }
+                    
+            }
+            const averageStar = Math.round(starSum / cnt * 10) / 10
+
+            // 빈도순으로 소팅해주기
+            let sorted = Object.entries(keywordCount).sort((a, b) => b[1] - a[1]);
+            var topthree = []
+            for(let element of sorted) {
+                topthree.push(element[0])
+                //console.log(element[0]+ ": " + element[1]);
+            }
+            var topKeywords = topthree.slice(0, 3)
+
+            const reviewInfo = {
+                averageStar,
+                topKeywords
+            }
+
+            // 유저 정보 파라미터로 추가해주기
+            for (j = 0; j < reviews.length; j++) { 
+                reviews[j].dataValues.UserIdx = reviews[j].User.UserIdx
+                reviews[j].dataValues.nickName = reviews[j].User.nickName
+                reviews[j].dataValues.level = reviews[j].User.level
+                delete reviews[j].dataValues.User
+            }
+            const result = {
+                reviewInfo,
+                reviews
+            }
+
+            return result;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+
     
     
     

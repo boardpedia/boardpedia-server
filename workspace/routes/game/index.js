@@ -31,7 +31,7 @@ router.post('/filter', authUtils.checkToken, gameController.filterGame);
 router.get('/detail/:gameIdx', authUtils.checkToken, gameController.getBoardgameDetail);
 
 /* 보드게임 후기 조회하기 */
-//router.get('/review/:gameIdx', authUtils.checkToken, gameController.getGameReviews);
+router.get('/review/:gameIdx', authUtils.checkToken, gameController.getGameReviews);
 
 
 
