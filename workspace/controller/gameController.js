@@ -13,7 +13,7 @@ module.exports = {
         // const day = req.params.day;
         const {UserIdx} = req.decoded
         try {
-            const trendingGames = await gameService.getTrending();
+            const trendingGames = await gameService.getTrending(UserIdx);
             if (!trendingGames) {
                 console.log('Trending Game이 없습니다!');
                 return res.status(sc.INTERNAL_SERVER_ERROR).send(ut.fail(sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR));

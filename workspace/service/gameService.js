@@ -9,17 +9,36 @@ const Op = sequelize.Op;
 module.exports = {
 
     /* 트렌딩 게임 조회 */
-    getTrending: async () => {
+    getTrending: async (UserIdx) => {
         try {
 
             const trendingGame = await Boardgame.findAll({
-                // where:{
-                //     day: day,
-                // },
                 attributes: ['GameIdx', 'name', 'intro', 'imageUrl'], 
                 limit: 7
             })
-            return trendingGame;
+
+            // 유저가 저장한 게임만 리턴
+            const savedGame = await Saved.findAll({
+                where : {
+                    UserIdx,
+                },
+                attributes: ['GameIdx']
+            })
+
+            // 게임당 저장 회수 리턴
+            const savedGameCount = await Saved.findAll({
+                attributes: ['GameIdx', [sequelize.fn('COUNT', 'GameIdx'), 'count']],
+                group: ['GameIdx'],
+                raw: true
+            })
+
+            const reviews = await Review.findAll({
+                attributes: ['GameIdx', 'star']
+            })
+
+            const result = await commonService.getSavedCountReview(trendingGame, savedGame, savedGameCount, reviews)
+            
+            return result;
         } catch (error) {
             throw error;
         }
@@ -34,7 +53,6 @@ module.exports = {
                 },
                 attributes: ['UserIdx']
             });
-            console.log('esss')
 
             const searchedGame = await Boardgame.findAll({
                 where:{
@@ -64,10 +82,6 @@ module.exports = {
             const reviews = await Review.findAll({
                 attributes: ['GameIdx', 'star']
             })
-            // const reviews = await Review.findAll({
-            //     attributes: ['GameIdx', [sequelize.fn('sum', sequelize.col('GameIdx')), 'sum']],
-            //     group: ['star'],
-            // })
 
             const result = await commonService.getSavedCountReview(searchedGame, savedGame, savedGameCount, reviews)
             

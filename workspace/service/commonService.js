@@ -20,10 +20,11 @@ module.exports = {
                 var cnt = 0
 
                 // 저장 여부 탐색하기
-                for (j = 0; j < savedGame.length; j++) { 
+                for (j = 0; j <= savedGame.length - 1; j++) { 
                     if (searchedGame[i].GameIdx == savedGame[j].GameIdx) {
                         searchedGame[i].dataValues.saved = 1;
-                        console.log(searchedGame[i].GameIdx, savedGame[j].GameIdx)
+                        //console.log('saved', searchedGame[i].GameIdx, savedGame[j].GameIdx)
+                        break
                     } else {
                         searchedGame[i].dataValues.saved = 0;
                     }
@@ -36,18 +37,17 @@ module.exports = {
                         searchedGame[i].dataValues.star = searchedGame[i].dataValues.star + reviews[j].star
                     } 
                 }
+
                 if (cnt > 0) {
                     searchedGame[i].dataValues.star =  searchedGame[i].dataValues.star / cnt
                 }
 
                 // 저장 카운트 매핑해주기
-                for (j = 0; j < savedGameCount.length; j++) { 
+                for (j = 0; j <= savedGameCount.length - 1; j++) { 
                     if (searchedGame[i].GameIdx == savedGameCount[j].GameIdx) {
                         searchedGame[i].dataValues.saveCount = searchedGame[i].dataValues.saveCount + savedGameCount[j].count
                     }
                 }
-
-                
                 
             }
 
