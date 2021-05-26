@@ -36,6 +36,8 @@ module.exports = {
                 attributes: ['GameIdx', 'star']
             })
 
+            // gameIdx
+
             const result = await commonService.getSavedCountReview(trendingGame, savedGame, savedGameCount, reviews)
             
             return result;
