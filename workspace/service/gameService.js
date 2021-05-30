@@ -272,6 +272,7 @@ module.exports = {
             }
             //console.log(databaseParams)
 
+            
             const searchedGame = await Boardgame.findAll({
                 attributes: ['GameIdx', 'name', 'intro', 'imageUrl', 'tag'], 
                 where : {
