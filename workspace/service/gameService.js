@@ -261,7 +261,15 @@ module.exports = {
                 attributes: ['GameIdx', 'name', 'intro', 'imageUrl', 'tag'], 
                 where : {
                     [Op.and]: [
-                        databaseParams,
+                        //databaseParams,
+                        { duration: '30분' ,
+                        playerNum: {
+                            [Op.lte]: 3,
+                        }, 
+                        maxPlayerNum : {
+                            [Op.gte]: 3,
+                        }
+                    }
                     ],
                 },
                 

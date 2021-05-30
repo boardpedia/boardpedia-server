@@ -13,10 +13,16 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: ''
         },
         playerNum: {
-            type: DataTypes.STRING(45),
+            type: DataTypes.INTEGER,
             unique: false,
             allowNull: true,
-            defaultValue: ''
+            //defaultValue: ''
+        },
+        maxPlayerNum: {
+            type: DataTypes.INTEGER,
+            unique: false,
+            allowNull: true,
+            //defaultValue: ''
         },
         duration: {
             type: DataTypes.STRING(45),
