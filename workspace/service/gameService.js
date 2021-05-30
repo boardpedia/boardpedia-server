@@ -241,22 +241,38 @@ module.exports = {
                     UserIdx,
                 }
             });
-
-            //const durationTime = duration.slice(0, -1)
             
             // 입력된 데이터 값만 받아주기
-            const paramName = ['level', 'duration']
-            var params = [level, duration]
+            const paramName = ['playerNum', 'level', 'tag', 'duration']
+            var params = [playerNum, level, tag, duration]
             const databaseParams = {}
             
             for (j = 0; j < params.length; j++) { 
                 if (params[j].length != 0 && params[j] != 0) {
-                    databaseParams[paramName[j]] = params[j];
+                    // 인원수 파라미터의 경우 최소, 최대 인원 비교
+                    if (j == 0) {
+                        databaseParams['playerNum'] = {[Op.lte] :  params[j]};
+                        databaseParams['maxPlayerNum'] = {[Op.gte] :  params[j]};
+                    }
+                    // 태그 파라미터의 경우 존재하는 모든 태그에 대해 유사성 검색
+                    else if (j == 2) {
+                        for (i = 0; i < tag.length; i++) { 
+                            databaseParams['tag'] = {
+                                [Op.or]: [{
+                                    [Op.like]: `%${tag[i]}%`,
+                                }]
+                            };
+                        }
+                    }
+                    else {
+                        databaseParams[paramName[j]] = params[j];
+                    }
+                    
                 }
             }
-            var ex = "2명-4명"
-            console.log(databaseParams)
+            //console.log(databaseParams)
 
+            
             const searchedGame = await Boardgame.findAll({
                 attributes: ['GameIdx', 'name', 'intro', 'imageUrl', 'tag'], 
                 where : {
@@ -264,7 +280,6 @@ module.exports = {
                         databaseParams,
                     ],
                 },
-                
             })
 
             // 유저가 저장한 게임만 리턴
