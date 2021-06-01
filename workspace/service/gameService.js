@@ -320,7 +320,7 @@ module.exports = {
             });
 
             const searchedGame = await Boardgame.findOne({
-                attributes: ['GameIdx', 'name', 'intro', 'imageUrl', 'tag'], 
+                attributes: ['GameIdx', 'name', 'intro', 'imageUrl', 'playerNum', 'maxPlayerNum', 'duration', 'level', 'tag'], 
                 where: {
                     GameIdx,
                 },
