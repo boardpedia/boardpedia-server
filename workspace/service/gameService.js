@@ -350,6 +350,13 @@ module.exports = {
             searchedGame.dataValues.webUrl = gameDetail.webUrl;
 
             // 게임 플레이 방식 파라미터
+            gameDetail.method = gameDetail.method.replace('1. ', '1.')
+            gameDetail.method = gameDetail.method.replace(' 2.', '\n2.')
+            gameDetail.method = gameDetail.method.replace(' 2. ', '\n2.')
+            gameDetail.method = gameDetail.method.replace(' 3.', '\n3.')
+            gameDetail.method = gameDetail.method.replace(' 3. ', '\n3.')
+            gameDetail.method = gameDetail.method.replace(' 4.', '\n4.')
+            gameDetail.method = gameDetail.method.replace(' 4. ', '\n4.')
             searchedGame.dataValues.method = gameDetail.method;
 
             // 유저가 저장한 게임만 리턴
