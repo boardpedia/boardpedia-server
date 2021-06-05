@@ -466,12 +466,13 @@ module.exports = {
                 reviews[j].dataValues.level = reviews[j].User.level
                 delete reviews[j].dataValues.User
             }
+
             const result = {
                 reviewInfo,
                 reviews
             }
+            return result
 
-            return result;
         } catch (error) {
             throw error;
         }

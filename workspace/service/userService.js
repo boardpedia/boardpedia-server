@@ -43,7 +43,8 @@ module.exports = {
                 reviews[i].keyword = res
             }
 
-            return reviews;
+            return reviews
+            
         } catch (error) {
             throw error;
         }
