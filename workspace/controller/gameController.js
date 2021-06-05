@@ -169,4 +169,21 @@ module.exports = {
         }
     },
 
+    /* 비슷한 보드게임 조회 GET: [ /similar/:gameIdx ] */
+    getSimilarGames: async (req, res) => {
+        const { UserIdx } = req.decoded
+        const { gameIdx } = req.params
+        try {
+            const similarGames = await gameService.getSimilarGames(UserIdx, gameIdx);
+            if (!similarGames) {
+                console.log('유사한 보드게임이 없습니다!');
+                return res.status(sc.NO_CONTENT).send(ut.fail(sc.NO_CONTENT, "유사한 보드게임이 없습니다!"));
+            }
+            return res.status(sc.OK).send(ut.success(sc.OK, "유사한 보드게임 조회 성공", similarGames));
+        } catch (error) {
+            console.error(error);
+            return res.status(sc.INTERNAL_SERVER_ERROR).send(ut.fail(sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR));
+        }
+    },
+
 }
