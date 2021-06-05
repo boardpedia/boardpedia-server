@@ -48,6 +48,12 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true,
             defaultValue: ''
         }, 
+        tip: {
+            type: DataTypes.STRING(100),
+            unique: false,
+            allowNull: true,
+            defaultValue: ''
+        }, 
         imageUrl: {
             type: DataTypes.STRING(200),
             unique: false,
