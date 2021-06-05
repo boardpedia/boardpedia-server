@@ -443,7 +443,10 @@ module.exports = {
                 }
                     
             }
-            const averageStar = Math.round(starSum / cnt * 10) / 10
+            var averageStar = Math.round(starSum / cnt * 10) / 10
+            if (!averageStar) {
+                averageStar = 0
+            }
 
             // 빈도순으로 소팅해주기
             let sorted = Object.entries(keywordCount).sort((a, b) => b[1] - a[1]);
