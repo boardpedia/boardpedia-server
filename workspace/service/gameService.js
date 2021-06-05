@@ -320,7 +320,7 @@ module.exports = {
             });
 
             const searchedGame = await Boardgame.findOne({
-                attributes: ['GameIdx', 'name', 'intro', 'imageUrl', 'playerNum', 'maxPlayerNum', 'duration', 'level', 'tag'], 
+                attributes: ['GameIdx', 'name', 'intro', 'imageUrl', 'playerNum', 'maxPlayerNum', 'duration', 'level', 'tag', 'tip'], 
                 where: {
                     GameIdx,
                 },
@@ -443,7 +443,10 @@ module.exports = {
                 }
                     
             }
-            const averageStar = Math.round(starSum / cnt * 10) / 10
+            var averageStar = Math.round(starSum / cnt * 10) / 10
+            if (!averageStar) {
+                averageStar = 0
+            }
 
             // 빈도순으로 소팅해주기
             let sorted = Object.entries(keywordCount).sort((a, b) => b[1] - a[1]);
@@ -466,10 +469,57 @@ module.exports = {
                 reviews[j].dataValues.level = reviews[j].User.level
                 delete reviews[j].dataValues.User
             }
+
             const result = {
                 reviewInfo,
                 reviews
             }
+            return result
+
+        } catch (error) {
+            throw error;
+        }
+    },
+
+
+     /* 유사한 보드게임 조회 GET : [ /game/similar/:gameIdx] */
+     getSimilarGames: async (UserIdx, GameIdx) => {
+        try {
+            const user = await User.findOne({
+                where: {
+                    UserIdx,
+                }
+            });
+
+            const searchedGame = await Boardgame.findAll({
+                order: [
+                    [sequelize.literal('RAND()')]
+                ],
+                limit: 4,
+                attributes: ['GameIdx', 'name', 'intro', 'imageUrl'], 
+
+            })
+
+            // 유저가 저장한 게임만 리턴
+            const savedGame = await Saved.findAll({
+                where : {
+                    UserIdx: user.UserIdx,
+                },
+                attributes: ['GameIdx']
+            })
+
+            // 게임당 저장 회수 리턴
+            const savedGameCount = await Saved.findAll({
+                attributes: ['GameIdx', [sequelize.fn('COUNT', 'GameIdx'), 'count']],
+                group: ['GameIdx'],
+                raw: true
+            })
+
+            const reviews = await Review.findAll({
+                attributes: ['GameIdx', 'star']
+            })
+            
+            const result = await commonService.getSavedCountReview(searchedGame, savedGame, savedGameCount, reviews)
 
             return result;
         } catch (error) {

@@ -33,6 +33,8 @@ router.get('/detail/:gameIdx', authUtils.checkToken, gameController.getBoardgame
 /* 보드게임 후기 조회하기 */
 router.get('/review/:gameIdx', authUtils.checkToken, gameController.getGameReviews);
 
+/* 유사한 보드게임 조회하기 */
+router.get('/similar/:gameIdx', authUtils.checkToken, gameController.getSimilarGames);
 
 
 module.exports = router;
