@@ -481,6 +481,41 @@ module.exports = {
         }
     },
 
+    /* 보드게임 후기 등록 POST: [/game/review/:gameIdx] */
+    postReview: async (UserIdx, GameIdx, star, keyword1, keyword2, keyword3) => {
+        try {
+            const checkReview = await Review.findOne({
+                where: {
+                    UserIdx,
+                }
+            });
+
+            console.log(checkReview)
+
+            var keywords = keyword1
+
+            if (keyword2.length > 1) {
+                keywords = keywords + ";" + keyword2
+            }
+
+            if (keyword3.length > 1) {
+                keywords = keywords + ";" + keyword3
+            }
+
+            const reviews = await Review.create({
+                GameIdx,
+                star,
+                UserIdx,
+                keyword: keywords
+
+            });
+
+            return reviews;
+        } catch (error) {
+            throw error;
+        }
+    },
+
 
      /* 유사한 보드게임 조회 GET : [ /game/similar/:gameIdx] */
      getSimilarGames: async (UserIdx, GameIdx) => {

@@ -36,5 +36,8 @@ router.get('/review/:gameIdx', authUtils.checkToken, gameController.getGameRevie
 /* 유사한 보드게임 조회하기 */
 router.get('/similar/:gameIdx', authUtils.checkToken, gameController.getSimilarGames);
 
+/* 보드게임 후기 추가하기 */
+router.post('/review/:gameIdx', authUtils.checkToken, gameController.postGameReviews);
+
 
 module.exports = router;
