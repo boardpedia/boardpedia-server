@@ -487,10 +487,15 @@ module.exports = {
             const checkReview = await Review.findOne({
                 where: {
                     UserIdx,
+                    GameIdx
                 }
             });
 
             console.log(checkReview)
+
+            if (checkReview) {
+                return "Already Done"
+            }
 
             var keywords = keyword1
 
