@@ -169,6 +169,34 @@ module.exports = {
         }
     },
 
+    /* 보드게임 후기 추가 POST : [ /game/review/:gameIdx ]*/
+    postGameReviews: async (req, res) => {
+        const { UserIdx } = req.decoded
+        const { gameIdx } = req.params
+        const {
+            star,
+            keyword1,
+            keyword2,
+            keyword3
+        } = req.body;
+        
+        try {
+            const gameReview = await gameService.postReview(UserIdx, gameIdx, star, keyword1, keyword2, keyword3);
+            if (!gameReview) {
+                console.log('후기가 등록되지 않았습니다!');
+                return res.status(sc.NOT_FOUND).send(ut.fail(sc.NOT_FOUND, "후기가 등록되지 않았습니다!"));
+            }
+            if (gameReview == "Already Done") {
+                console.log('해당 게임에 후기를 이미 등록했습니다.');
+                return res.status(sc.NOT_FOUND).send(ut.fail(sc.NOT_FOUND, "해당 게임에 후기를 이미 등록했습니다."));
+            }
+            return res.status(sc.OK).send(ut.success(sc.OK, "보드게임 후기 등록 성공", gameReview));
+        } catch (error) {
+            console.error(error);
+            return res.status(sc.INTERNAL_SERVER_ERROR).send(ut.fail(sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR));
+        }
+    },
+
     /* 비슷한 보드게임 조회 GET: [ /similar/:gameIdx ] */
     getSimilarGames: async (req, res) => {
         const { UserIdx } = req.decoded
