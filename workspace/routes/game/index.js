@@ -18,8 +18,8 @@ router.post('/save', authUtils.checkToken, gameController.saveGame);
 /*보드게임 저장 취소하기	*/
 router.delete('/save', authUtils.checkToken, gameController.saveGameUndo);
 
-/* 저장한 보드게임 조회 GET : [ /game/saved] */
-router.get('/saved', authUtils.checkToken, gameController.getSavedGames);
+// /* 저장한 보드게임 조회 GET : [ /game/saved] */
+// router.get('/saved', authUtils.checkToken, gameController.getSavedGames);
 
 /* 전체 보드게임 조회하기 */
 router.get('/:pageIdx', authUtils.checkToken, gameController.getBoardgames);
