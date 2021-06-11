@@ -21,6 +21,24 @@ module.exports = {
         }
     },
 
+    /* 사용자 닉네임 수정 PUT : [/user] */
+    updateNickName: async (UserIdx, nickName) => {
+
+        try {
+            const user = await User.update(
+                { nickName , 
+                attributes : ['UserIdx', 'nickName', 'level'] },
+                { where: { UserIdx } , },
+                //{ attributes : ['UserIdx', 'nickName', 'level']}
+            )
+
+            return user;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+
     /* 보드게임 후기 조회 GET : [ /game/played] */
     getPlayedGames: async (UserIdx) => {
         try {

@@ -44,6 +44,23 @@ module.exports = {
 
     },
 
+    /* 유저 닉네임 수정 PUT: [ /user ] */
+    updateNickName: async (req, res) => {
+        const { UserIdx } = req.decoded
+        const { nickName } = req.body;
+        try {
+            const userInfo = await userService.updateNickName(UserIdx, nickName);
+            if (!userInfo) {
+                console.log('회원 정보가 없습니다!');
+                return res.status(sc.NO_CONTENT).send(ut.fail(sc.NO_CONTENT, "회원 정보가 없습니다!"));
+            }
+            return res.status(sc.OK).send(ut.success(sc.OK, "회원 닉네임 수정 성공"));
+        } catch (error) {
+            console.error(error);
+            return res.status(sc.INTERNAL_SERVER_ERROR).send(ut.fail(sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR));
+        }
+    },
+
     /* 마이페이지 유저 정보 조회 GET: [ /user ] */
     getUserInfo: async (req, res) => {
         const { UserIdx } = req.decoded

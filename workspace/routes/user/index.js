@@ -6,6 +6,9 @@ const userController = require('../../controller/userController')
 /* 사용자 로그인 /user/login */
 router.post('/login', userController.login);
 
+/* 사용자 닉네임 수정 /user */
+router.put('/', authUtils.checkToken, userController.updateNickName);
+
 /* 마이페이지 유저 정보 조회 /user */
 router.get('/', authUtils.checkToken, userController.getUserInfo);
 
