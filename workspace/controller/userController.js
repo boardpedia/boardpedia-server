@@ -13,8 +13,7 @@ module.exports = {
         
         const {
             snsId,
-            provider,
-            nickName
+            provider
         } = req.body;
 
         try {
@@ -28,8 +27,7 @@ module.exports = {
                 user = await User.create({
                     snsId,
                     provider,
-                    level: "보드신입생",
-                    nickName
+                    level: "보드신입생"
                 })
                 
             }
