@@ -97,6 +97,21 @@ module.exports = {
         }
     },
 
+    /* 회원 탈퇴 DELETE : [ /user ] */
+    deleteUser: async (UserIdx) => {
+        try {
+            const user = await User.destroy({
+                where: {
+                    UserIdx,
+                },
+                attributes: ['UserIdx', 'nickName']
+            });
+            return user;
+        } catch (error) {
+            throw error;
+        }
+    },
+
 
 
 
