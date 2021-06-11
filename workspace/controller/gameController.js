@@ -104,9 +104,9 @@ module.exports = {
             playerNum,
             level,
             tag,
-            duration
+            duration,
+            pageIdx
         } = req.body;
-        console.log(playerNum, level, tag, duration)
 
         try {
             const searchedGame = await gameService.filterGame(UserIdx, playerNum, level, tag, duration);
@@ -114,7 +114,10 @@ module.exports = {
                 console.log('검색 결과가 없습니다!');
                 return res.status(sc.NOT_FOUND).send(ut.fail(sc.NOT_FOUND, "검색 결과가 없습니다!"));
             }
-            return res.status(sc.OK).send(ut.success(sc.OK, "보드게임 조건 검색 성공", searchedGame));
+            if (searchedGame.length > (pageIdx + 1) * 10) {
+                return res.status(sc.OK).send(ut.success(sc.OK, "보드게임 조건 검색 성공 (보드게임이 더 있어요!)", searchedGame.slice(pageIdx * 10, (pageIdx + 1) * 10)));
+            }
+            return res.status(sc.OK).send(ut.success(sc.OK, "보드게임 조건 검색 성공 (검색 완료)", searchedGame.slice(pageIdx * 10, (pageIdx + 1) * 10)));
         } catch (error) {
             console.error(error);
             return res.status(sc.INTERNAL_SERVER_ERROR).send(ut.fail(sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR));
