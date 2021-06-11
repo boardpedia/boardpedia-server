@@ -68,6 +68,35 @@ module.exports = {
         }
     },
 
+    /* 저장한 보드게임 조회 GET : [ /user/saved] */
+    getSavedGames: async (UserIdx) => {
+        try {
+            const user = await User.findOne({
+                where: {
+                    UserIdx,
+                }
+            });
+
+            const allGames = await Saved.findAll({
+
+                attributes: ['SavedIdx'], 
+                where : {
+                    UserIdx,
+                }, 
+
+                include: [{
+                    model: Boardgame,
+                    attributes: ['GameIdx', 'name', 'intro', 'imageUrl'], 
+                }]
+
+            });
+
+            return allGames;
+        } catch (error) {
+            throw error;
+        }
+    },
+
 
 
 

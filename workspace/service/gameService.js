@@ -203,35 +203,6 @@ module.exports = {
         }
     },
 
-    /* 저장한 보드게임 조회 GET : [ /game/saved] */
-    getSavedGames: async (UserIdx) => {
-        try {
-            const user = await User.findOne({
-                where: {
-                    UserIdx,
-                }
-            });
-
-            const allGames = await Saved.findAll({
-
-                attributes: ['SavedIdx'], 
-                where : {
-                    UserIdx,
-                }, 
-
-                include: [{
-                    model: Boardgame,
-                    attributes: ['GameIdx', 'name', 'intro', 'imageUrl'], 
-                }]
-
-            });
-
-            return allGames;
-        } catch (error) {
-            throw error;
-        }
-    },
-
 
     /* 보드게임 필터 검색 조회 POST : [ game/filter] */
     filterGame: async (UserIdx, playerNum, level, tag, duration) => {
