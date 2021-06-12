@@ -1,4 +1,4 @@
-const { Boardgame, BoardgameDetail, User, Saved, Review } = require('../models');
+const { Boardgame, BoardgameDetail, User, Saved, Review, NewGame } = require('../models');
 const commonService = require('../service/commonService')
 const { search } = require('../routes');
 const sequelize = require('sequelize');
@@ -94,7 +94,7 @@ module.exports = {
     },
 
     /* 보드게임 추가 POST : [ /game/add] */
-    addGame: async (UserIdx, name, level, minPlayerNum, maxPlayerNum, keyword1, keyword2, keyword3) => {
+    addGame: async (UserIdx, name, level, duration, minPlayerNum, maxPlayerNum, keyword1, keyword2, keyword3) => {
         try {
             const user = await User.findOne({
                 where: {
@@ -102,22 +102,27 @@ module.exports = {
                 }
             });
 
-            const check = await Saved.findOne({
-                where: {
-                    UserIdx,
-                    GameIdx
-                }
-            });
-            if (check) {
-                console.log('이미 저장된 보드게임입니다.')
-                return
-            } else {
-                const saveGame = await Saved.create({
-                    GameIdx
-                });
-                await user.addSaved(saveGame)
+            var keywords = keyword1
+
+            if (keyword2.length > 1) {
+                keywords = keywords + ";" + keyword2
             }
-            return GameIdx;
+
+            if (keyword3.length > 1) {
+                keywords = keywords + ";" + keyword3
+            }
+
+            const addedGame = await NewGame.create({
+                name,
+                level,
+                playerNum: minPlayerNum,
+                maxPlayerNum,
+                duration,
+                UserIdx,
+                tag: keywords
+            });
+            
+            return addedGame;
         } catch (error) {
             throw error;
         }
@@ -271,9 +276,7 @@ module.exports = {
                     
                 }
             }
-            //console.log(databaseParams)
-
-            
+           
             const searchedGame = await Boardgame.findAll({
                 attributes: ['GameIdx', 'name', 'intro', 'imageUrl', 'tag'], 
                 where : {

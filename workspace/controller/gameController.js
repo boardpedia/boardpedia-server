@@ -45,9 +45,9 @@ module.exports = {
     /* 보드게임 추가하기 POST : [ /game/add ]*/
     addGame: async (req, res) => {
         const { UserIdx } = req.decoded
-        const { name, level, minPlayerNum, maxPlayerNum, keyword1, keyword2, keyword3 } = req.body;
+        const { name, level, duration, minPlayerNum, maxPlayerNum, keyword1, keyword2, keyword3 } = req.body;
         try {
-            const addedGame = await gameService.addGame(UserIdx, name, level, minPlayerNum, maxPlayerNum, keyword1, keyword2, keyword3);
+            const addedGame = await gameService.addGame(UserIdx, name, duration, level, minPlayerNum, maxPlayerNum, keyword1, keyword2, keyword3);
             if (!addedGame) {
                 console.log('검색 결과가 없습니다!');
                 return res.status(sc.NOT_FOUND).send(ut.fail(sc.NOT_FOUND, "입력된 보드게임이 없습니다."));
