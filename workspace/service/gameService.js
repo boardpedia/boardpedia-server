@@ -93,6 +93,36 @@ module.exports = {
         }
     },
 
+    /* 보드게임 추가 POST : [ /game/add] */
+    addGame: async (UserIdx, name, level, minPlayerNum, maxPlayerNum, keyword1, keyword2, keyword3) => {
+        try {
+            const user = await User.findOne({
+                where: {
+                    UserIdx,
+                }
+            });
+
+            const check = await Saved.findOne({
+                where: {
+                    UserIdx,
+                    GameIdx
+                }
+            });
+            if (check) {
+                console.log('이미 저장된 보드게임입니다.')
+                return
+            } else {
+                const saveGame = await Saved.create({
+                    GameIdx
+                });
+                await user.addSaved(saveGame)
+            }
+            return GameIdx;
+        } catch (error) {
+            throw error;
+        }
+    },
+
 
     /* 보드게임 저장 POST : [ /game/save] */
     saveGame: async (UserIdx, GameIdx) => {
