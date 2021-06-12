@@ -306,8 +306,12 @@ module.exports = {
             })
             
 
-            const result = await commonService.getSavedCountReview(searchedGame, savedGame, savedGameCount, reviews)
-            return result;
+            const games = await commonService.getSavedCountReview(searchedGame, savedGame, savedGameCount, reviews)
+            const result = ({
+                totalNum : games.length,
+                games
+            });
+            return games;
         } catch (error) {
             throw error;
         }
