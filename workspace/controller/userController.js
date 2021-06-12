@@ -109,4 +109,19 @@ module.exports = {
         }
     },
 
+    /* 유저 탈퇴 DELETE: [ user ] */
+    deleteUser: async (req, res) => {
+        const { UserIdx } = req.decoded
+        try {
+            const userInfo = await userService.deleteUser(UserIdx);
+            if (!userInfo) {
+                return res.status(sc.NO_CONTENT).send(ut.fail(sc.NO_CONTENT, "유저 정보가 존재하지 않습니다"));
+            }
+            return res.status(sc.OK).send(ut.success(sc.OK, "회원 탈퇴 성공"));
+        } catch (error) {
+            console.error(error);
+            return res.status(sc.INTERNAL_SERVER_ERROR).send(ut.fail(sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR));
+        }
+    },
+
 }

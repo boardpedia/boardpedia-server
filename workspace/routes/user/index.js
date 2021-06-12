@@ -18,4 +18,7 @@ router.get('/saved', authUtils.checkToken, userController.getSavedGames);
 /* 플레이한 보드게임 조회하기 GET: [ /game/played ]*/
 router.get('/played', authUtils.checkToken, userController.getPlayedGames);
 
+/* 사용자 탈퇴 /user */
+router.delete('/', authUtils.checkToken, userController.deleteUser);
+
 module.exports = router;

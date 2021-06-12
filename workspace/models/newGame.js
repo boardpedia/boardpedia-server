@@ -16,7 +16,13 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(45),
             unique: false,
             allowNull: true,
-            defaultValue: ''
+            defaultValue: 0
+        },
+        maxPlayerNum: {
+            type: DataTypes.STRING(45),
+            unique: false,
+            allowNull: true,
+            defaultValue: 0
         },
         duration: {
             type: DataTypes.STRING(45),
@@ -30,24 +36,12 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true,
             defaultValue: ''
         },
-        intro: {
-            type: DataTypes.STRING(100),
-            unique: false,
-            allowNull: true,
-            defaultValue: ''
-        }, 
         tag: {
             type: DataTypes.STRING(100),
             unique: false,
             allowNull: true,
             defaultValue: ''
-        }, 
-        imageUrl: {
-            type: DataTypes.STRING(200),
-            unique: false,
-            allowNull: true,
-            defaultValue: ''
-        }
+        },
         
     }, {
         //모델의 옵션들을 지정하는곳 

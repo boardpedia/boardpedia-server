@@ -42,6 +42,24 @@ module.exports = {
         }
     },
 
+    /* 보드게임 추가하기 POST : [ /game/add ]*/
+    addGame: async (req, res) => {
+        const { UserIdx } = req.decoded
+        const { name, level, duration, minPlayerNum, maxPlayerNum, keyword1, keyword2, keyword3 } = req.body;
+        try {
+            const addedGame = await gameService.addGame(UserIdx, name, duration, level, minPlayerNum, maxPlayerNum, keyword1, keyword2, keyword3);
+            if (!addedGame) {
+                console.log('검색 결과가 없습니다!');
+                return res.status(sc.NOT_FOUND).send(ut.fail(sc.NOT_FOUND, "입력된 보드게임이 없습니다."));
+            }
+            return res.status(sc.OK).send(ut.success(sc.OK, "보드게임 추가 성공", addedGame));
+        } catch (error) {
+            console.error(error);
+            return res.status(sc.INTERNAL_SERVER_ERROR).send(ut.fail(sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR));
+        }
+    },
+
+
     /* 보드게임 저장하기 POST: [ /game/save ] */
     saveGame: async (req, res) => {
         const { UserIdx } = req.decoded
@@ -100,13 +118,13 @@ module.exports = {
     /* 보드게임 필터 조회 POST : [ /game/filter ]*/
     filterGame: async (req, res) => {
         const { UserIdx } = req.decoded
+        const pageIdx = req.params.pageIdx
         const {
             playerNum,
             level,
             tag,
             duration
         } = req.body;
-        console.log(playerNum, level, tag, duration)
 
         try {
             const searchedGame = await gameService.filterGame(UserIdx, playerNum, level, tag, duration);
@@ -114,7 +132,11 @@ module.exports = {
                 console.log('검색 결과가 없습니다!');
                 return res.status(sc.NOT_FOUND).send(ut.fail(sc.NOT_FOUND, "검색 결과가 없습니다!"));
             }
-            return res.status(sc.OK).send(ut.success(sc.OK, "보드게임 조건 검색 성공", searchedGame));
+            const result = ({
+                totalNum : searchedGame.length,
+                searchedGame : searchedGame.slice(pageIdx * 10, (pageIdx + 1) * 10)
+            });
+            return res.status(sc.OK).send(ut.success(sc.OK, "보드게임 조건 검색 성공", result));
         } catch (error) {
             console.error(error);
             return res.status(sc.INTERNAL_SERVER_ERROR).send(ut.fail(sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR));
