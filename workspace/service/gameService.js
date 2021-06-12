@@ -239,7 +239,7 @@ module.exports = {
     },
 
 
-    /* 보드게임 필터 검색 조회 POST : [ game/filter] */
+    /* 보드게임 필터 검색 조회 POST : [ game/filter/:pageIdx] */
     filterGame: async (UserIdx, playerNum, level, tag, duration) => {
         try {
             const user = await User.findOne({
@@ -304,13 +304,13 @@ module.exports = {
             const reviews = await Review.findAll({
                 attributes: ['GameIdx', 'star']
             })
-            
 
+            for (j = 0; j < searchedGame.length; j++) { 
+                var res = searchedGame[j].tag.split("; ");
+                searchedGame[j].tag = res
+            }
+        
             const games = await commonService.getSavedCountReview(searchedGame, savedGame, savedGameCount, reviews)
-            const result = ({
-                totalNum : games.length,
-                games
-            });
             return games;
         } catch (error) {
             throw error;
