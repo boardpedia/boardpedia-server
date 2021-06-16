@@ -1,9 +1,11 @@
 # boardpedia-server
 나만의 보드게임 백과사전, 보드피디아
 <br/>
-Tech: 
 `node.js`, `express`, `sequelize`, `mysql`, `AWS S3`, `AWS EC2`
 <br/>
+
+## API 명세서
+[API 명세서 링크](https://github.com/boardpedia/boardpedia-server/wiki)
 
 ## Commit Rule
 - [add] + 작업 내용
