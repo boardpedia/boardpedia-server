@@ -3,6 +3,7 @@ const commonService = require('../service/commonService')
 const { search } = require('../routes');
 const sequelize = require('sequelize');
 const gameDetail = require('../models/gameDetail');
+const saved = require('../models/saved');
 const Op = sequelize.Op;
 
 
@@ -14,7 +15,7 @@ module.exports = {
 
             const trendingGame = await Boardgame.findAll({
                 attributes: ['GameIdx', 'name', 'intro', 'imageUrl'], 
-                limit: 7
+                limit: 5
             })
 
             // 유저가 저장한 게임만 리턴
@@ -35,10 +36,12 @@ module.exports = {
             const reviews = await Review.findAll({
                 attributes: ['GameIdx', 'star']
             })
-
-            // gameIdx
-
             const result = await commonService.getSavedCountReview(trendingGame, savedGame, savedGameCount, reviews)
+
+            // saveCount 내림차 순으로 정렬
+            result.sort(function(a,b) {
+                return b.dataValues.saveCount - a.dataValues.saveCount;
+            });
             
             return result;
         } catch (error) {
@@ -320,9 +323,7 @@ module.exports = {
                 where: {
                     UserIdx,
                 },
-                
             });
-
             const searchedGame = await Boardgame.findOne({
                 attributes: ['GameIdx', 'name', 'intro', 'imageUrl', 'playerNum', 'maxPlayerNum', 'duration', 'level', 'tag', 'tip'], 
                 where: {
@@ -337,9 +338,6 @@ module.exports = {
                     GameIdx,
                 },
             })
-            // if (gameDetail == null) {
-            //     return gameDetail
-            // }
 
             var res = searchedGame.tag.split("; ");
             searchedGame.tag = res
