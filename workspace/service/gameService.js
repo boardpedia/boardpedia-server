@@ -224,10 +224,6 @@ module.exports = {
             const reviews = await Review.findAll({
                 attributes: ['GameIdx', 'star']
             })
-            // const reviews = await Review.findAll({
-            //     attributes: ['GameIdx', [sequelize.fn('sum', sequelize.col('GameIdx')), 'sum']],
-            //     group: ['star'],
-            // })
 
             const left = pageIdx * 10
             const right = pageIdx * 10 + 10
@@ -499,8 +495,6 @@ module.exports = {
                 }
             });
 
-            console.log(checkReview)
-
             if (checkReview) {
                 return "Already Done"
             }
@@ -539,13 +533,45 @@ module.exports = {
                 }
             });
 
+            const mainGame = await Boardgame.findOne({
+                where: {
+                    GameIdx
+                },
+            })
             const searchedGame = await Boardgame.findAll({
+                where:{
+                    [Op.and] : {
+                        // 동일 게임 제외 시켜주기
+                        GameIdx: {
+                            [Op.not]: mainGame.dataValues.GameIdx,
+                        },
+                        // 각 조건으로 유사한 게임 리턴
+                        [Op.or]: [{
+                            playerNum: 
+                            {
+                                [Op.like]: mainGame.dataValues.playerNum,
+                            },
+                            maxPlayerNum:
+                            {
+                                [Op.like]: mainGame.dataValues.maxPlayerNum,
+                            },
+                            level:
+                            {
+                                [Op.like]: mainGame.dataValues.level,
+                            },
+                            duration:
+                            {
+                                [Op.like]: mainGame.dataValues.duration,
+                            },
+                        }] 
+                    }
+                },
+                // 랜덤으로 네 개 리턴
                 order: [
                     [sequelize.literal('RAND()')]
                 ],
                 limit: 4,
                 attributes: ['GameIdx', 'name', 'intro', 'imageUrl'], 
-
             })
 
             // 유저가 저장한 게임만 리턴
@@ -574,6 +600,8 @@ module.exports = {
             throw error;
         }
     },
+
+    
 
 
     
