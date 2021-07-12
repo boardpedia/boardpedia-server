@@ -3,6 +3,7 @@ const commonService = require('../service/commonService')
 const { search } = require('../routes');
 const sequelize = require('sequelize');
 const gameDetail = require('../models/gameDetail');
+const saved = require('../models/saved');
 const Op = sequelize.Op;
 
 
@@ -14,7 +15,7 @@ module.exports = {
 
             const trendingGame = await Boardgame.findAll({
                 attributes: ['GameIdx', 'name', 'intro', 'imageUrl'], 
-                limit: 7
+                limit: 5
             })
 
             // 유저가 저장한 게임만 리턴
@@ -35,10 +36,12 @@ module.exports = {
             const reviews = await Review.findAll({
                 attributes: ['GameIdx', 'star']
             })
-
-            // gameIdx
-
             const result = await commonService.getSavedCountReview(trendingGame, savedGame, savedGameCount, reviews)
+
+            // saveCount 내림차 순으로 정렬
+            result.sort(function(a,b) {
+                return b.dataValues.saveCount - a.dataValues.saveCount;
+            });
             
             return result;
         } catch (error) {
@@ -224,10 +227,6 @@ module.exports = {
             const reviews = await Review.findAll({
                 attributes: ['GameIdx', 'star']
             })
-            // const reviews = await Review.findAll({
-            //     attributes: ['GameIdx', [sequelize.fn('sum', sequelize.col('GameIdx')), 'sum']],
-            //     group: ['star'],
-            // })
 
             const left = pageIdx * 10
             const right = pageIdx * 10 + 10
@@ -324,9 +323,7 @@ module.exports = {
                 where: {
                     UserIdx,
                 },
-                
             });
-
             const searchedGame = await Boardgame.findOne({
                 attributes: ['GameIdx', 'name', 'intro', 'imageUrl', 'playerNum', 'maxPlayerNum', 'duration', 'level', 'tag', 'tip'], 
                 where: {
@@ -351,21 +348,34 @@ module.exports = {
             // 별점 파라미터
             searchedGame.dataValues.star = 0;
 
-            // 게임 목적 파라미터
-            searchedGame.dataValues.objective = gameDetail.objective;
+            // 게임 상세 설명이 존재할 시
+            if (gameDetail) {
+                 // 게임 목적 파라미터
+                searchedGame.dataValues.objective = gameDetail.objective;
 
-            // 게임 링크 파라미터
-            searchedGame.dataValues.webUrl = gameDetail.webUrl;
+                // 게임 링크 파라미터
+                searchedGame.dataValues.webUrl = gameDetail.webUrl;
 
-            // 게임 플레이 방식 파라미터
-            gameDetail.method = gameDetail.method.replace('1. ', '1.')
-            gameDetail.method = gameDetail.method.replace(' 2.', '\n2.')
-            gameDetail.method = gameDetail.method.replace(' 2. ', '\n2.')
-            gameDetail.method = gameDetail.method.replace(' 3.', '\n3.')
-            gameDetail.method = gameDetail.method.replace(' 3. ', '\n3.')
-            gameDetail.method = gameDetail.method.replace(' 4.', '\n4.')
-            gameDetail.method = gameDetail.method.replace(' 4. ', '\n4.')
-            searchedGame.dataValues.method = gameDetail.method;
+                // 게임 플레이 방식 파라미터
+                gameDetail.method = gameDetail.method.replace('1. ', '1.')
+                gameDetail.method = gameDetail.method.replace(' 2.', '\n2.')
+                gameDetail.method = gameDetail.method.replace(' 2. ', '\n2.')
+                gameDetail.method = gameDetail.method.replace(' 3.', '\n3.')
+                gameDetail.method = gameDetail.method.replace(' 3. ', '\n3.')
+                gameDetail.method = gameDetail.method.replace(' 4.', '\n4.')
+                gameDetail.method = gameDetail.method.replace(' 4. ', '\n4.')
+                searchedGame.dataValues.method = gameDetail.method;
+            }
+            else {
+                 // 게임 목적 파라미터
+                searchedGame.dataValues.objective = "";
+
+                // 게임 링크 파라미터
+                searchedGame.dataValues.webUrl = "";
+
+                // 게임 플레이 방식 파라미터
+                searchedGame.dataValues.method = "";
+            }
 
             // 유저가 저장한 게임만 리턴
             const savedGame = await Saved.findAll({
@@ -499,8 +509,6 @@ module.exports = {
                 }
             });
 
-            console.log(checkReview)
-
             if (checkReview) {
                 return "Already Done"
             }
@@ -539,13 +547,45 @@ module.exports = {
                 }
             });
 
+            const mainGame = await Boardgame.findOne({
+                where: {
+                    GameIdx
+                },
+            })
             const searchedGame = await Boardgame.findAll({
+                where:{
+                    [Op.and] : {
+                        // 동일 게임 제외 시켜주기
+                        GameIdx: {
+                            [Op.not]: mainGame.dataValues.GameIdx,
+                        },
+                        // 각 조건으로 유사한 게임 리턴
+                        [Op.or]: [{
+                            playerNum: 
+                            {
+                                [Op.like]: mainGame.dataValues.playerNum,
+                            },
+                            maxPlayerNum:
+                            {
+                                [Op.like]: mainGame.dataValues.maxPlayerNum,
+                            },
+                            level:
+                            {
+                                [Op.like]: mainGame.dataValues.level,
+                            },
+                            duration:
+                            {
+                                [Op.like]: mainGame.dataValues.duration,
+                            },
+                        }] 
+                    }
+                },
+                // 랜덤으로 네 개 리턴
                 order: [
                     [sequelize.literal('RAND()')]
                 ],
                 limit: 4,
                 attributes: ['GameIdx', 'name', 'intro', 'imageUrl'], 
-
             })
 
             // 유저가 저장한 게임만 리턴
@@ -574,6 +614,8 @@ module.exports = {
             throw error;
         }
     },
+
+    
 
 
     
