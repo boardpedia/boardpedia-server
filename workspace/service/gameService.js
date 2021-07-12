@@ -337,6 +337,9 @@ module.exports = {
                     GameIdx,
                 },
             })
+            // if (gameDetail == null) {
+            //     return gameDetail
+            // }
 
             var res = searchedGame.tag.split("; ");
             searchedGame.tag = res
@@ -347,21 +350,34 @@ module.exports = {
             // 별점 파라미터
             searchedGame.dataValues.star = 0;
 
-            // 게임 목적 파라미터
-            searchedGame.dataValues.objective = gameDetail.objective;
+            // 게임 상세 설명이 존재할 시
+            if (gameDetail) {
+                 // 게임 목적 파라미터
+                searchedGame.dataValues.objective = gameDetail.objective;
 
-            // 게임 링크 파라미터
-            searchedGame.dataValues.webUrl = gameDetail.webUrl;
+                // 게임 링크 파라미터
+                searchedGame.dataValues.webUrl = gameDetail.webUrl;
 
-            // 게임 플레이 방식 파라미터
-            gameDetail.method = gameDetail.method.replace('1. ', '1.')
-            gameDetail.method = gameDetail.method.replace(' 2.', '\n2.')
-            gameDetail.method = gameDetail.method.replace(' 2. ', '\n2.')
-            gameDetail.method = gameDetail.method.replace(' 3.', '\n3.')
-            gameDetail.method = gameDetail.method.replace(' 3. ', '\n3.')
-            gameDetail.method = gameDetail.method.replace(' 4.', '\n4.')
-            gameDetail.method = gameDetail.method.replace(' 4. ', '\n4.')
-            searchedGame.dataValues.method = gameDetail.method;
+                // 게임 플레이 방식 파라미터
+                gameDetail.method = gameDetail.method.replace('1. ', '1.')
+                gameDetail.method = gameDetail.method.replace(' 2.', '\n2.')
+                gameDetail.method = gameDetail.method.replace(' 2. ', '\n2.')
+                gameDetail.method = gameDetail.method.replace(' 3.', '\n3.')
+                gameDetail.method = gameDetail.method.replace(' 3. ', '\n3.')
+                gameDetail.method = gameDetail.method.replace(' 4.', '\n4.')
+                gameDetail.method = gameDetail.method.replace(' 4. ', '\n4.')
+                searchedGame.dataValues.method = gameDetail.method;
+            }
+            else {
+                 // 게임 목적 파라미터
+                searchedGame.dataValues.objective = "";
+
+                // 게임 링크 파라미터
+                searchedGame.dataValues.webUrl = "";
+
+                // 게임 플레이 방식 파라미터
+                searchedGame.dataValues.method = "";
+            }
 
             // 유저가 저장한 게임만 리턴
             const savedGame = await Saved.findAll({
