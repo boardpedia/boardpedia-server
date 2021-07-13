@@ -10,6 +10,11 @@ module.exports = {
     /* 사용자 정보 조회 GET: [/user] */
     getUserInfo: async (UserIdx) => {
         try { 
+            const user = await User.findOne({
+                where: {
+                    UserIdx,
+                }
+            });
             // 레벨업 기준을 충족한다면
             const levelup = await commonService.checkLevelUp(UserIdx)
             return levelup;
@@ -20,7 +25,6 @@ module.exports = {
 
     /* 사용자 닉네임 수정 PUT : [/user] */
     updateNickName: async (UserIdx, nickName) => {
-
         try {
             const user = await User.update(
                 { nickName , 

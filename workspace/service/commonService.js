@@ -95,8 +95,6 @@ module.exports = {
             if (reviewCount != null) {
                 review = reviewCount.length
             }
-            console.log(days, saved, review)
-
             // 회원가입 조건 확인
             if (5 < days < 7 && 3 <= saved && 1 <= review) {
                 user.update({
