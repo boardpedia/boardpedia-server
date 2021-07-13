@@ -1,20 +1,18 @@
 const { Boardgame, Theme, Saved, Review, User } = require('../models');
+const commonService = require('../service/commonService')
+
 const { search } = require('../routes');
 const sequelize = require('sequelize');
 const Op = sequelize.Op;
 
 module.exports = {
+
     /* 사용자 정보 조회 GET: [/user] */
     getUserInfo: async (UserIdx) => {
-        try {
-            const user = await User.findOne({
-                where: {
-                    UserIdx,
-                },
-                attributes : ['UserIdx', 'nickName', 'level']
-            });
-
-            return user;
+        try { 
+            // 레벨업 기준을 충족한다면
+            const levelup = await commonService.checkLevelUp(UserIdx)
+            return levelup;
         } catch (error) {
             throw error;
         }
