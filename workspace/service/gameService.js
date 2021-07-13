@@ -8,7 +8,6 @@ const Op = sequelize.Op;
 
 
 module.exports = {
-
     /* 트렌딩 게임 조회 */
     getTrending: async (UserIdx) => {
         try {
@@ -61,7 +60,7 @@ module.exports = {
 
             const searchedGame = await Boardgame.findAll({
                 where:{
-                    // 유사한 이름도 검색 가능
+                    // 유사한 이름 검색 가능
                     name: {
                         [Op.like]: '%' + name + '%'
                     }
@@ -99,12 +98,6 @@ module.exports = {
     /* 보드게임 추가 POST : [ /game/add] */
     addGame: async (UserIdx, name, level, duration, minPlayerNum, maxPlayerNum, keyword1, keyword2, keyword3) => {
         try {
-            const user = await User.findOne({
-                where: {
-                    UserIdx,
-                }
-            });
-
             var keywords = keyword1
 
             if (keyword2.length > 1) {
@@ -421,12 +414,6 @@ module.exports = {
     /* 보드게임 후기 조회 GET : [ /review/:gameIdx] */
     getGameReviews: async (UserIdx, GameIdx) => {
         try {
-            const user = await User.findOne({
-                where: {
-                    UserIdx,
-                }
-            });
-
             // 각 리뷰 가져오기
             const reviews = await Review.findAll({ 
                 where : {
@@ -461,6 +448,7 @@ module.exports = {
                 }
                     
             }
+            // 평균 평점 계산
             var averageStar = Math.round(starSum / cnt * 10) / 10
             if (!averageStar) {
                 averageStar = 0
@@ -471,10 +459,8 @@ module.exports = {
             var topthree = []
             for(let element of sorted) {
                 topthree.push(element[0])
-                //console.log(element[0]+ ": " + element[1]);
             }
             var topKeywords = topthree.slice(0, 3)
-
             const reviewInfo = {
                 averageStar,
                 topKeywords
@@ -555,7 +541,7 @@ module.exports = {
             const searchedGame = await Boardgame.findAll({
                 where:{
                     [Op.and] : {
-                        // 동일 게임 제외 시켜주기
+                        // 동일 게임 제외
                         GameIdx: {
                             [Op.not]: mainGame.dataValues.GameIdx,
                         },
@@ -614,14 +600,5 @@ module.exports = {
             throw error;
         }
     },
-
-    
-
-
-    
-    
-    
-
-    
 
 }
