@@ -1,11 +1,10 @@
 const { Boardgame, Theme, Saved, Review, User } = require('../models');
-
 const { search } = require('../routes');
 const sequelize = require('sequelize');
 const Op = sequelize.Op;
 
-
 module.exports = {
+    /* 사용자 정보 조회 GET: [/user] */
     getUserInfo: async (UserIdx) => {
         try {
             const user = await User.findOne({
@@ -29,7 +28,6 @@ module.exports = {
                 { nickName , 
                 attributes : ['UserIdx', 'nickName', 'level'] },
                 { where: { UserIdx } , },
-                //{ attributes : ['UserIdx', 'nickName', 'level']}
             )
 
             return user;
@@ -88,9 +86,7 @@ module.exports = {
                     model: Boardgame,
                     attributes: ['GameIdx', 'name', 'intro', 'imageUrl'], 
                 }]
-
             });
-
             return allGames;
         } catch (error) {
             throw error;
@@ -111,10 +107,4 @@ module.exports = {
             throw error;
         }
     },
-
-
-
-
-    
-
 }

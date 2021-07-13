@@ -27,7 +27,7 @@ module.exports = {
                 user = await User.create({
                     snsId,
                     provider,
-                    level: "보드신입생"
+                    level: "브론즈"
                 })
                 
             }
