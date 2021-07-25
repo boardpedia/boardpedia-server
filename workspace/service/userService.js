@@ -1,21 +1,23 @@
 const { Boardgame, Theme, Saved, Review, User } = require('../models');
+const commonService = require('../service/commonService')
 
 const { search } = require('../routes');
 const sequelize = require('sequelize');
 const Op = sequelize.Op;
 
-
 module.exports = {
+
+    /* 사용자 정보 조회 GET: [/user] */
     getUserInfo: async (UserIdx) => {
-        try {
+        try { 
             const user = await User.findOne({
                 where: {
                     UserIdx,
-                },
-                attributes : ['UserIdx', 'nickName', 'level']
+                }
             });
-
-            return user;
+            // 레벨업 기준을 충족한다면
+            const levelup = await commonService.checkLevelUp(UserIdx)
+            return levelup;
         } catch (error) {
             throw error;
         }
@@ -23,13 +25,11 @@ module.exports = {
 
     /* 사용자 닉네임 수정 PUT : [/user] */
     updateNickName: async (UserIdx, nickName) => {
-
         try {
             const user = await User.update(
                 { nickName , 
                 attributes : ['UserIdx', 'nickName', 'level'] },
                 { where: { UserIdx } , },
-                //{ attributes : ['UserIdx', 'nickName', 'level']}
             )
 
             return user;
@@ -88,9 +88,7 @@ module.exports = {
                     model: Boardgame,
                     attributes: ['GameIdx', 'name', 'intro', 'imageUrl'], 
                 }]
-
             });
-
             return allGames;
         } catch (error) {
             throw error;
@@ -111,10 +109,4 @@ module.exports = {
             throw error;
         }
     },
-
-
-
-
-    
-
 }

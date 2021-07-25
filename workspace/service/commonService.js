@@ -1,5 +1,4 @@
 const { Boardgame, Theme, Saved, Review, User } = require('../models');
-
 const { search } = require('../routes');
 const sequelize = require('sequelize');
 const Op = sequelize.Op;
@@ -53,6 +52,66 @@ module.exports = {
 
             return searchedGame;
         } catch (error) {
+            throw error;
+        }
+    },
+
+    /* 사용자 레벨업 로직 
+    실버: 회원가입 5일차, 저장횟수 3회, 후기갯수 1회
+    골드: 회원가입 7일차, 저장횟수 8회, 후기갯수 4회
+    다이아: 회원가입 21일차, 저장횟수 12회, 후기갯수 8회
+    */
+    checkLevelUp: async (UserIdx) => {
+        try {
+            // 회원가입 일수 체크
+            const user = await User.findOne({
+                where: {
+                    UserIdx,
+                },
+                attributes : ['UserIdx', 'nickName', 'level', 'createdAt', 'updatedAt']
+            });
+            var today = new Date()
+            var diff = Math.abs(today - user.dataValues.createdAt);
+            var days = diff / 60000 / 60 / 24
+            
+            // 유저의 게임 저장 횟수
+            const savedCount = await Saved.findAll({
+                where: {
+                    UserIdx
+                }
+            })
+            var saved = 0
+            if (savedCount != null) {
+                saved = savedCount.length
+            }
+
+            // 유저의 후기 갯수
+            const reviewCount = await Review.findAll({
+                where: {
+                    UserIdx
+                }
+            })
+            var review = 0
+            if (reviewCount != null) {
+                review = reviewCount.length
+            }
+            // 회원가입 조건 확인
+            if (5 < days < 7 && 3 <= saved && 1 <= review) {
+                user.update({
+                    level: '실버'
+                })
+            } else if (7 < days < 21 && 8 <= saved && 4 <= review) {
+                user.update({
+                    level: '골드'
+                })
+            } else if (21 < days && 12 <= saved && 8 <= review) {
+                user.update({
+                    level: '다이아'
+                })
+            } 
+
+            return user
+        } catch(error) {
             throw error;
         }
     },

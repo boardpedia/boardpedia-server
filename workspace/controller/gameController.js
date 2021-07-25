@@ -134,7 +134,7 @@ module.exports = {
             }
             const result = ({
                 totalNum : searchedGame.length,
-                searchedGame : searchedGame.slice(pageIdx * 10, (pageIdx + 1) * 10)
+                searchedGame : searchedGame.slice(pageIdx * 10, (parseInt(pageIdx) + 1) * 10)
             });
             return res.status(sc.OK).send(ut.success(sc.OK, "보드게임 조건 검색 성공", result));
         } catch (error) {

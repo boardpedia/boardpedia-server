@@ -1,6 +1,5 @@
 const { Boardgame, Theme, Saved, Review, User } = require('../models');
 const commonService = require('../service/commonService')
-
 const { search } = require('../routes');
 const sequelize = require('sequelize');
 const Op = sequelize.Op;
