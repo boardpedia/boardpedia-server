@@ -11,6 +11,12 @@ module.exports = {
     getTheme: async () => {
         try {
             const themes = await Theme.findAll({
+                // 더미 테마 제외해주기
+                where: {
+                    ThemeIdx: {
+                        [Op.ne]: 100
+                    },
+                },
                 // 랜덤으로 리턴해주는 로직 추가하기
                 order: [
                     [sequelize.literal('RAND()')]
@@ -81,10 +87,6 @@ module.exports = {
             const reviews = await Review.findAll({
                 attributes: ['GameIdx', 'star']
             })
-            // const reviews = await Review.findAll({
-            //     attributes: ['GameIdx', [sequelize.fn('sum', sequelize.col('GameIdx')), 'sum']],
-            //     group: ['star'],
-            // })
 
             const themeGame = await commonService.getSavedCountReview(searchedGame, savedGame, savedGameCount, reviews)
             const result = ({
