@@ -96,7 +96,7 @@ module.exports = {
     },
 
     /* 보드게임 추가 POST : [ /game/add] */
-    addGame: async (UserIdx, name, level, duration, minPlayerNum, maxPlayerNum, keyword1, keyword2, keyword3) => {
+    addGame: async (UserIdx, name, level, minPlayerNum, maxPlayerNum, keyword1, keyword2, keyword3) => {
         try {
             var keywords = keyword1
 
@@ -113,7 +113,6 @@ module.exports = {
                 level,
                 playerNum: minPlayerNum,
                 maxPlayerNum,
-                duration,
                 UserIdx,
                 tag: keywords
             });
