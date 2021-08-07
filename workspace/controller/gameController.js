@@ -45,7 +45,7 @@ module.exports = {
     /* 보드게임 추가하기 POST : [ /game/add ]*/
     addGame: async (req, res) => {
         const { UserIdx } = req.decoded
-        const { name, level, duration, minPlayerNum, maxPlayerNum, keyword1, keyword2, keyword3 } = req.body;
+        const { name, level, minPlayerNum, maxPlayerNum, keyword1, keyword2, keyword3 } = req.body;
         try {
             const addedGame = await gameService.addGame(UserIdx, name, duration, level, minPlayerNum, maxPlayerNum, keyword1, keyword2, keyword3);
             if (!addedGame) {
@@ -113,8 +113,6 @@ module.exports = {
         }
     },
 
-    
-
     /* 보드게임 필터 조회 POST : [ /game/filter ]*/
     filterGame: async (req, res) => {
         const { UserIdx } = req.decoded
@@ -134,7 +132,7 @@ module.exports = {
             }
             const result = ({
                 totalNum : searchedGame.length,
-                searchedGame : searchedGame.slice(pageIdx * 10, (parseInt(pageIdx) + 1) * 10)
+                searchedGame : searchedGame.slice(pageIdx * 20, (parseInt(pageIdx) + 1) * 20)
             });
             return res.status(sc.OK).send(ut.success(sc.OK, "보드게임 조건 검색 성공", result));
         } catch (error) {
