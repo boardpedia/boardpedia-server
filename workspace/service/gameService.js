@@ -110,7 +110,7 @@ module.exports = {
 
             const addedGame = await NewGame.create({
                 name,
-                level,
+                level:level,
                 playerNum: minPlayerNum,
                 maxPlayerNum,
                 UserIdx,
