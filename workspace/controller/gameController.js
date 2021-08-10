@@ -196,7 +196,7 @@ module.exports = {
                 console.log('해당 게임에 후기를 이미 등록했습니다.');
                 return res.status(sc.NOT_FOUND).send(ut.fail(sc.NOT_FOUND, "해당 게임에 후기를 이미 등록했습니다."));
             }
-            return res.status(sc.OK).send(ut.success(sc.OK, "보드게임 후기 등록 성공", gameReview));
+            return res.status(sc.OK).send(ut.success(sc.OK, "보드게임 후기 등록 성공"));
         } catch (error) {
             console.error(error);
             return res.status(sc.INTERNAL_SERVER_ERROR).send(ut.fail(sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR));
