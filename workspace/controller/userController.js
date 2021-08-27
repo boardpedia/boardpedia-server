@@ -16,6 +16,8 @@ module.exports = {
             provider
         } = req.body;
 
+        var status = "회원"
+
         try {
             user = await User.findOne({
                 where:{
@@ -29,13 +31,15 @@ module.exports = {
                     provider,
                     level: "브론즈"
                 })
+                status = "신규 가입자"
                 
             }
             const {accessToken,refreshToken} = await jwt.sign(user);
             
         return res.status(sc.OK).send(ut.success(sc.OK,rm.SIGN_IN_SUCCESS,{
             accessToken,
-            refreshToken
+            refreshToken,
+            status
         }))
         } catch(error){
             console.error(error);
